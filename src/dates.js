@@ -1,5 +1,7 @@
 const ISO_DATE=/^(\d{4})-(\d{2})-(\d{2})$/;
 const UK_DATE=/^(\d{2})-(\d{2})-(\d{4})$/;
+export const UK_DATE_INPUT_ATTRIBUTES='type="text" inputmode="numeric" placeholder="DD-MM-YYYY"';
+export const UK_DATE_VALIDATION_MESSAGE='Enter a valid date in DD-MM-YYYY format.';
 
 function valid(y,m,d){const date=new Date(Date.UTC(+y,+m-1,+d));return date.getUTCFullYear()===+y&&date.getUTCMonth()===+m-1&&date.getUTCDate()===+d}
 
