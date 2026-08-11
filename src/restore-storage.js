@@ -1,0 +1,3 @@
+import {openDB,STORES} from './storage.js';
+/** A replacement restore is committed as one IndexedDB transaction; any error rolls all stores back. */
+export async function replaceAllStores(data){const names=Object.keys(STORES);if(names.some(name=>!Array.isArray(data[name])))throw new Error('Backup data inventory is incomplete.');const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(names,'readwrite');for(const name of names){const store=tx.objectStore(name);store.clear();for(const value of data[name])store.put(value)}tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('Restore transaction was aborted.'))})}
