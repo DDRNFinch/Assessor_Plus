@@ -1,0 +1,4 @@
+export function evidencedEntries(assessment){
+ const out=[]; for(const method of ['practical','knowledge']){for(const ac of assessment.selected?.[method]||[])out.push({unit:assessment.primaryUnit,ac,method,mappingSource:'PRIMARY',sourceUnit:assessment.primaryUnit});for(const m of assessment.mappings?.[method]||[])if(m.decision==='automatic'||m.decision==='confirmed')out.push({unit:m.targetUnit,ac:m.targetAC,method,mappingSource:m.decision==='automatic'?'AUTOMATIC HOLISTIC MATCH':'ASSESSOR-CONFIRMED HOLISTIC MATCH',sourceUnit:m.sourceUnit});}return out;
+}
+export function deriveMatrix(assessments){const map=new Map();for(const a of assessments)for(const e of evidencedEntries(a)){const key=`${e.unit}.${e.ac}`;if(!map.has(key))map.set(key,[]);map.get(key).push({...e,assessmentId:a.id,date:a.date,assessor:a.assessor,media:(a.media||[]).map(m=>m.reference)});}return map;}
