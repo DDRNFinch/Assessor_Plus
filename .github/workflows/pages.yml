@@ -36,3 +36,5 @@ jobs:
       - name: Deploy current main to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+# Deployment trigger: 2026-08-11
