@@ -32,13 +32,13 @@ function v1Database(){
  return {indexedDB,state};
 }
 
-test('a populated V1 database upgrades additively to V2 exactly once',async()=>{
+test('a populated V1 database upgrades additively to V3 exactly once',async()=>{
  const fake=v1Database();globalThis.indexedDB=fake.indexedDB;
  const storage=await import(`../src/storage.js?upgrade=${Date.now()}`);
  const db=await storage.openDB();
- assert.equal(fake.state.version,2);
- assert.deepEqual([...db.objectStoreNames].sort(),['assessments','learners','media','professionalDocuments','profileAssets','settings']);
- assert.deepEqual(fake.state.creates,['profileAssets','professionalDocuments']);
+ assert.equal(fake.state.version,3);
+ assert.deepEqual([...db.objectStoreNames].sort(),['assessments','learners','media','professionalDocuments','profileAssets','reviews','settings']);
+ assert.deepEqual(fake.state.creates,['profileAssets','professionalDocuments','reviews']);
  assert.equal((await storage.all('learners'))[0].name,'Existing learner');
  assert.equal((await storage.all('assessments'))[0].learnerId,'learner-existing');
  assert.equal(await storage.get('settings','assessor-profile'),undefined);
@@ -46,7 +46,7 @@ test('a populated V1 database upgrades additively to V2 exactly once',async()=>{
  assert.equal(await storage.get('profileAssets','provider-logo'),undefined);
  assert.deepEqual(await storage.all('professionalDocuments'),[]);
  await storage.openDB();
- assert.deepEqual(fake.state.creates,['profileAssets','professionalDocuments']);
+ assert.deepEqual(fake.state.creates,['profileAssets','professionalDocuments','reviews']);
 });
 
 test('optional profile failures return safe defaults and report diagnostics',async()=>{
