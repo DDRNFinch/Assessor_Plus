@@ -7,4 +7,4 @@ export function validateCourse(course){
  for(const u of units){const seen=new Set(); for(const lo of u.learningOutcomes||[]){if(!lo.id||!lo.wording) errors.push(`Invalid LO in ${u.id}`); for(const ac of lo.criteria||[]){if(seen.has(ac.id))errors.push(`Duplicate ${u.id}.${ac.id}`);seen.add(ac.id);if(!ac.wording?.trim())errors.push(`Missing wording ${u.id}.${ac.id}`);if(!ac.operativeVerb?.trim())errors.push(`Missing operativeVerb ${u.id}.${ac.id}`);if(!ac.evidenceClass)errors.push(`Missing evidenceClass ${u.id}.${ac.id}`);}}}
  return {valid:errors.length===0,counts,errors};
 }
-export const availableUnits=(course,learner)=>course.units.filter(u=>course.course.mandatoryUnitIds.includes(u.id)||learner.optionalUnitId===u.id);
+export const availableUnits=(course,learner)=>{const mandatory=course.course.mandatoryUnitIds.map(id=>course.units.find(u=>u.id===id)).filter(Boolean),optional=course.units.find(u=>u.id===learner.optionalUnitId);return optional?[...mandatory,optional]:mandatory;};

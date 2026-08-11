@@ -5,3 +5,14 @@ export async function get(store,key){const db=await openDB();return new Promise(
 export async function put(store,value){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(value);tx.oncomplete=()=>res(value);tx.onerror=()=>rej(tx.error)});}
 export async function remove(store,key){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).delete(key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});}
 export const nextId=(prefix,items)=>`${prefix}-${String(Math.max(0,...items.map(x=>Number(x.id?.split('-')[1])||0))+1).padStart(4,'0')}`;
+
+/** Targeted local deletion. Media is selected by assessmentId as well as metadata IDs so orphaned blobs cannot remain. */
+export async function deleteAssessmentCascade(assessmentId){
+ const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['assessments','media'],'readwrite'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media');assessments.delete(assessmentId);const request=media.openCursor();request.onsuccess=()=>{const cursor=request.result;if(!cursor)return;const value=cursor.value;if(value.assessmentId===assessmentId)cursor.delete();cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
+}
+export async function deleteLearnerCascade(learnerId){
+ const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['learners','assessments','media'],'readwrite'),learners=tx.objectStore('learners'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media'),assessmentIds=new Set();learners.delete(learnerId);const ar=assessments.openCursor();ar.onsuccess=()=>{const cursor=ar.result;if(!cursor){const mr=media.openCursor();mr.onsuccess=()=>{const item=mr.result;if(!item)return;if(assessmentIds.has(item.value.assessmentId))item.delete();item.continue()};return}if(cursor.value.learnerId===learnerId){assessmentIds.add(cursor.value.id);cursor.delete()}cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
+}
+/** Pure selectors shared by deletion tests and the IndexedDB cascade contract. */
+export const assessmentBelongsToLearner=(assessment,learnerId)=>assessment.learnerId===learnerId;
+export const mediaBelongsToAssessments=(media,assessmentIds)=>assessmentIds.has(media.assessmentId);
