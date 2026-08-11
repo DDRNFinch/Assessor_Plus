@@ -1,26 +1,42 @@
-const DB='assessor-plus-v01',VERSION=4;
+const DB='assessor-plus-v01',SCHEMA_VERSION=5;
 export const STORES=Object.freeze({learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id',reviews:'id',visits:'id'});
 let promise;
 
+const missingStores=db=>Object.keys(STORES).filter(name=>!db.objectStoreNames.contains(name));
+const attachVersionChange=db=>{db.onversionchange=()=>{db.close();promise=undefined};return db};
+
+function openAtVersion(version){return new Promise((resolve,reject)=>{
+ const request=indexedDB.open(DB,version);let settled=false,blockedTimer=null;
+ const clearBlockedTimer=()=>{if(blockedTimer){clearTimeout(blockedTimer);blockedTimer=null}};
+ const fail=error=>{if(settled)return;settled=true;clearBlockedTimer();reject(error)};
+ request.onupgradeneeded=()=>{const db=request.result;for(const[name,keyPath]of Object.entries(STORES))if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath})};
+ request.onblocked=()=>{
+  console.warn('Assessor+ is waiting for an older app window to release local data.');
+  clearBlockedTimer();
+  blockedTimer=setTimeout(()=>fail(Object.assign(new Error('The Assessor+ data upgrade is still blocked by another open app window.'),{name:'BlockedError'})),15000);
+ };
+ request.onerror=()=>fail(request.error||new Error('IndexedDB could not be opened.'));
+ request.onsuccess=()=>{
+  if(settled){request.result.close();return}
+  settled=true;clearBlockedTimer();resolve(attachVersionChange(request.result));
+ };
+})}
+
+async function openCompatibleDB(){
+ const current=await new Promise((resolve,reject)=>{
+  const request=indexedDB.open(DB);
+  request.onerror=()=>reject(request.error||new Error('IndexedDB could not be opened.'));
+  request.onsuccess=()=>resolve(request.result);
+ });
+ const missing=missingStores(current);
+ if(!missing.length)return attachVersionChange(current);
+ const targetVersion=Math.max(SCHEMA_VERSION,current.version+1);
+ current.close();
+ return openAtVersion(targetVersion);
+}
+
 export function openDB(){
- if(!promise)promise=new Promise((resolve,reject)=>{
-  const request=indexedDB.open(DB,VERSION);let settled=false,blockedTimer=null;
-  const clearBlockedTimer=()=>{if(blockedTimer){clearTimeout(blockedTimer);blockedTimer=null}};
-  const fail=error=>{if(settled)return;settled=true;clearBlockedTimer();promise=undefined;reject(error)};
-  request.onupgradeneeded=()=>{const db=request.result;for(const[name,keyPath]of Object.entries(STORES))if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath})};
-  request.onblocked=()=>{
-   console.warn('Assessor+ is waiting for an older app window to release local data.');
-   clearBlockedTimer();
-   blockedTimer=setTimeout(()=>fail(Object.assign(new Error('The Assessor+ data upgrade is still blocked by another open app window.'),{name:'BlockedError'})),15000);
-  };
-  request.onerror=()=>fail(request.error||new Error('IndexedDB could not be opened.'));
-  request.onsuccess=()=>{
-   if(settled){request.result.close();return}
-   settled=true;clearBlockedTimer();const db=request.result;
-   db.onversionchange=()=>{db.close();promise=undefined};
-   resolve(db);
-  };
- }).catch(error=>{promise=undefined;throw error});
+ if(!promise)promise=openCompatibleDB().catch(error=>{promise=undefined;throw error});
  return promise;
 }
 
