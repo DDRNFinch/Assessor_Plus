@@ -1,4 +1,4 @@
-import {availableUnits,flattenCourse} from './course.js';
+import {availableUnits,flattenCourse,DEFAULT_COURSE_ID} from './course.js';
 import {deriveMatrix} from './matrix.js';
 
 /** Learner-specific projection of the authoritative course; the course itself is never changed. */
@@ -11,7 +11,7 @@ export const filterAssessmentToActiveUnits=(assessment,course,learner)=>{
 };
 
 export function deriveUnitProgress(course,learner,assessments){
- const saved=assessments.filter(a=>a.learnerId===learner.id),matrix=deriveMatrix(saved);
+ const saved=assessments.filter(a=>a.learnerId===learner.id&&(!course.course.id||(a.courseId||DEFAULT_COURSE_ID)===course.course.id)),matrix=deriveMatrix(saved);
  return availableUnits(course,learner).map(unit=>{
   const criteria=flattenCourse({units:[unit]}),practical=criteria.filter(x=>x.ac.evidenceClass==='practical'),knowledge=criteria.filter(x=>x.ac.evidenceClass==='knowledge');
   const assessed=criteria.filter(x=>matrix.has(`${unit.id}.${x.ac.id}`));
