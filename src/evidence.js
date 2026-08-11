@@ -13,7 +13,7 @@ export function nextEvidenceReference(assessment,kind){
 export function applySignatureSnapshot(assessment,profile,now=new Date()){
   if(!profile?.signatureDataUrl)return false;
   assessment.assessor=profile.name||assessment.assessor||'';
-  assessment.signatureSnapshot={dataUrl:String(profile.signatureDataUrl),mimeType:profile.signatureType||'image/png',capturedAt:now.toISOString()};
+  assessment.signatureSnapshot={dataUrl:String(profile.signatureDataUrl),mimeType:profile.signatureType||'image/png',capturedAt:now.toISOString(),assessorName:profile.name||assessment.assessor||'',providerName:profile.providerName||''};
   assessment.signatureDate=now.toISOString().slice(0,10);assessment.signature='';return true;
 }
 export function invalidateSignature(a){a.signatureSnapshot=null;a.signature='';a.signatureDate='';}

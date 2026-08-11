@@ -8,12 +8,12 @@ import {assessmentPdfText} from '../src/pdf.js';
 const root=new URL('../',import.meta.url);
 const read=path=>readFile(new URL(path,root),'utf8');
 
-test('V0.4 release metadata, shell and offline cache are consistent',async()=>{
+test('V0.5 release metadata, shell and offline cache are consistent',async()=>{
   const [pkg,index,manifest,sw,app]=await Promise.all([read('package.json'),read('index.html'),read('manifest.webmanifest'),read('sw.js'),read('src/app.js')]);
-  assert.equal(JSON.parse(pkg).version,'0.4.0');
-  assert.match(index,/V0\.4/);
-  assert.equal(JSON.parse(manifest).version,'0.4.0');
-  assert.match(sw,/assessor-plus-v0\.4/);
+  assert.equal(JSON.parse(pkg).version,'0.5.0');
+  assert.match(index,/V0\.5/);
+  assert.equal(JSON.parse(manifest).version,'0.5.0');
+  assert.match(sw,/assessor-plus-v0\.5/);
   assert.match(sw,/src\/feedback\.js/);
   assert.match(app,/beforeinstallprompt/);
   assert.match(app,/display-mode: standalone/);

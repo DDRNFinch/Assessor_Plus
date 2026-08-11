@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {applySignatureSnapshot} from '../src/evidence.js';
+const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
+test('primary navigation is exactly Learners, Assessments and Toolkit',async()=>{const html=await read('index.html'),nav=html.match(/<nav class="bottom-nav"[\s\S]*?<\/nav>/)[0],labels=[...nav.matchAll(/<button[^>]*>([^<]+)<\/button>/g)].map(x=>x[1]);assert.deepEqual(labels,['Learners','Assessments','Toolkit']);assert.doesNotMatch(nav,/Settings/) });
+test('startup, toolkit and the four settings categories are wired',async()=>{const app=await read('src/app.js');for(const term of ['WELCOME / PROFILE SETUP','Local Storage Notice','storageAccepted','Toolkit','General','Notifications','Learning Support','Admin','Professional Documents'])assert.match(app,new RegExp(term));assert.match(app,/signature-pad/);assert.match(app,/image\/png,image\/jpeg,image\/webp/)});
+test('IndexedDB V2 migration is additive and contains local binary stores',async()=>{const storage=await read('src/storage.js');assert.match(storage,/VERSION=2/);assert.match(storage,/profileAssets/);assert.match(storage,/professionalDocuments/);assert.doesNotMatch(storage,/deleteDatabase|localStorage\.clear/) });
+test('signed assessment snapshots identity and signature independently',()=>{const a={assessor:'Old'},p={name:'Pat',providerName:'College',signatureDataUrl:'data:image/png;base64,one',signatureType:'image/png'};assert.equal(applySignatureSnapshot(a,p,new Date('2026-01-01')),true);p.name='Changed';p.providerName='Other';p.signatureDataUrl='data:image/png;base64,two';assert.equal(a.signatureSnapshot.dataUrl,'data:image/png;base64,one');assert.equal(a.signatureSnapshot.assessorName,'Pat');assert.equal(a.signatureSnapshot.providerName,'College')});
