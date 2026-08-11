@@ -3,7 +3,7 @@ import {activeUnitIds,filterAssessmentToActiveUnits,validKsbEvidence} from './pr
 import {DEFAULT_COURSE_ID} from './course.js';
 
 export function previousKsbEvidence(course,learner,assessments,currentAssessmentId=''){
- const map=new Map();for(const a of assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&a.id!==currentAssessmentId))for(const item of validKsbEvidence(a)){if(!map.has(item.reference))map.set(item.reference,[]);map.get(item.reference).push({assessmentId:a.id,method:item.method,date:a.date})}return map;
+ const map=new Map();for(const a of assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&(!learner.pathwayId||a.pathwayId===learner.pathwayId)&&a.id!==currentAssessmentId))for(const item of validKsbEvidence(a)){if(!map.has(item.reference))map.set(item.reference,[]);map.get(item.reference).push({assessmentId:a.id,method:item.method,date:a.date})}return map;
 }
 
 /**
