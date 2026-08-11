@@ -1,16 +1,25 @@
-import {availableUnits,flattenCourse,DEFAULT_COURSE_ID} from './course.js';
+import {availableUnits,flattenCourse,DEFAULT_COURSE_ID,isKsbCourse} from './course.js';
 import {deriveMatrix} from './matrix.js';
 
 /** Learner-specific projection of the authoritative course; the course itself is never changed. */
-export const activeUnitIds=(course,learner)=>new Set(course.course?.mandatoryUnitIds?availableUnits(course,learner).map(unit=>unit.id):course.units.map(unit=>unit.id));
+export const activeUnitIds=(course,learner)=>new Set(isKsbCourse(course)?[]:course.course?.mandatoryUnitIds?availableUnits(course,learner).map(unit=>unit.id):course.units.map(unit=>unit.id));
 export const filterActiveMappings=(mappings,course,learner)=>mappings.filter(mapping=>activeUnitIds(course,learner).has(mapping.targetUnit));
 export const filterAssessmentToActiveUnits=(assessment,course,learner)=>{
+ if(isKsbCourse(course))return structuredClone(assessment);
  const active=activeUnitIds(course,learner),copy=structuredClone(assessment);
  for(const method of ['practical','knowledge'])copy.mappings[method]=(copy.mappings?.[method]||[]).filter(mapping=>active.has(mapping.targetUnit));
  return copy;
 };
 
+export function deriveKsbProgress(course,learner,assessments){
+ const saved=assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id),selected=new Set(saved.flatMap(a=>a.selectedKSBs||[]));
+ const group=collection=>({assessed:course[collection].filter(x=>selected.has(x.reference)).length,total:course[collection].length});
+ const knowledge=group('knowledge'),skills=group('skills'),behaviours=group('behaviours');
+ return{knowledge,skills,behaviours,overall:{assessed:knowledge.assessed+skills.assessed+behaviours.assessed,total:knowledge.total+skills.total+behaviours.total}};
+}
+
 export function deriveUnitProgress(course,learner,assessments){
+ if(isKsbCourse(course))return[];
  const saved=assessments.filter(a=>a.learnerId===learner.id&&(!course.course.id||(a.courseId||DEFAULT_COURSE_ID)===course.course.id)),matrix=deriveMatrix(saved);
  return availableUnits(course,learner).map(unit=>{
   const criteria=flattenCourse({units:[unit]}),practical=criteria.filter(x=>x.ac.evidenceClass==='practical'),knowledge=criteria.filter(x=>x.ac.evidenceClass==='knowledge');

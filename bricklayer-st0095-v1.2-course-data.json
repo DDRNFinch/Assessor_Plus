@@ -1,0 +1,254 @@
+{
+  "course": {
+    "id": "st0095-v1.2-bricklayer",
+    "courseId": "st0095-v1.2-bricklayer",
+    "courseType": "KSB",
+    "title": "Bricklayer",
+    "reference": "ST0095",
+    "version": "1.2",
+    "level": 2,
+    "typicalDurationMonths": 24
+  },
+  "knowledge": [
+    {
+      "reference": "K1",
+      "wording": "Awareness of health and safety regulations, standards, and guidance and impact on role. Control of Substances Hazardous to Health (CoSHH). Fire safety. Health and Safety at Work Act. Asbestos awareness. Manual handling. signage, fire extinguishers. Safety signage. Situational awareness. Slips, trips, and falls. Working in confined spaces. Working at height. Electrical safety respiratory protective equipment (RPE), dust suppression."
+    },
+    {
+      "reference": "K2",
+      "wording": "Safety control equipment and how to use personal protective equipment (PPE)."
+    },
+    {
+      "reference": "K3",
+      "wording": "Safe systems of work: Site inductions, toolbox talks, risk assessments, method statements and hazard identification in the work area."
+    },
+    {
+      "reference": "K4",
+      "wording": "Impact of the sector on the environment: Efficient use of resources. Recycling, reuse, surface water contamination and safe disposal of waste."
+    },
+    {
+      "reference": "K5",
+      "wording": "The importance and considerations of the environment and sustainability: Thermal qualities, airtightness and ventilation in buildings."
+    },
+    {
+      "reference": "K6",
+      "wording": "Principles of building: Foundations, roofs, walls, cavity step trays, floors, utilities and services, insulation, fire, moisture and air protection, damp proof courses, the use of brick ties and quality of materials."
+    },
+    {
+      "reference": "K7",
+      "wording": "Standards and regulations associated with bricklaying activities: British standards, building regulations and warranty provider standards."
+    },
+    {
+      "reference": "K8",
+      "wording": "Materials and their characteristics: Bricks and blocks, efflorescence, mortar, damp proof courses (DPC), wall ties, plasticisers, concrete and steel lintels, Rolled Steel Joist (RSJ), fire stopping, insulation, cement and building sand."
+    },
+    {
+      "reference": "K9",
+      "wording": "Modern methods of construction: Rapid build technology, precast components, corner profiles, alternative frame and cladding systems, masonry support systems."
+    },
+    {
+      "reference": "K10",
+      "wording": "Methods of interpreting and extracting relevant information from drawings and specifications."
+    },
+    {
+      "reference": "K11",
+      "wording": "Basic principles of digital design and modelling systems."
+    },
+    {
+      "reference": "K12",
+      "wording": "Simple resource estimation techniques: Quantity of bricks and blocks, amount of mortar, quantity of wall ties, DPCs, cavity trays and lintels."
+    },
+    {
+      "reference": "K13",
+      "wording": "Hand tool use, maintenance and storage: Levels, measures, hammers, bolsters, brick hammers, trowels, brick jointer, line blocks and pins, scutch, chariot and brick clamps."
+    },
+    {
+      "reference": "K14",
+      "wording": "Power tool use and limitations: Disc cutters, mixers and drills."
+    },
+    {
+      "reference": "K15",
+      "wording": "Bond types: English bond, flemish bond, garden wall bonds and broken bond."
+    },
+    {
+      "reference": "K16",
+      "wording": "Brick solid wall setting out, construction and capping methods."
+    },
+    {
+      "reference": "K17",
+      "wording": "Joint finishes: Half round, flush, weather struck and recessed."
+    },
+    {
+      "reference": "K18",
+      "wording": "Principles of basic decorative walling and piers: projecting and contrasting brick, isolated and attached pier, banding."
+    },
+    {
+      "reference": "K19",
+      "wording": "Principles of the use of expansion joints."
+    },
+    {
+      "reference": "K20",
+      "wording": "Mixing Mortar: Ratios, silos, pre-mixed, gauging, hand mixing and mechanical mixing."
+    },
+    {
+      "reference": "K21",
+      "wording": "Cavity wall setting out techniques: Bricks and blocks, openings and levels, use of profiles, gauge rods and squares."
+    },
+    {
+      "reference": "K22",
+      "wording": "Cavity wall construction using stretcher bond brick and block walling, forming openings, closing cavities. selection and placement of wall ties, insulation, damp proof courses (DPCs), cavity trays, weep holes, lintels and fire stopping."
+    },
+    {
+      "reference": "K23",
+      "wording": "Brick on edge and soldier courses: setting out and construction techniques."
+    },
+    {
+      "reference": "K24",
+      "wording": "Defects and repair: Construction defects and repair methods."
+    },
+    {
+      "reference": "K25",
+      "wording": "Methods of protecting materials and work: Frost, water and construction damage."
+    },
+    {
+      "reference": "K26",
+      "wording": "Verbal communication techniques and construction terminology."
+    },
+    {
+      "reference": "K27",
+      "wording": "Principles of good team working."
+    },
+    {
+      "reference": "K28",
+      "wording": "Inclusion, equity and diversity in the workplace."
+    },
+    {
+      "reference": "K29",
+      "wording": "Methods of cutting bricks and blocks using hand tools."
+    },
+    {
+      "reference": "K30",
+      "wording": "Brick walls with raking cut: Setting out and construction techniques."
+    },
+    {
+      "reference": "K31",
+      "wording": "Well-being: Mental and physical health considerations in self and others and how to access support."
+    }
+  ],
+  "skills": [
+    {
+      "reference": "S1",
+      "wording": "Comply with health and safety regulations, standards, and guidance."
+    },
+    {
+      "reference": "S2",
+      "wording": "Identify and use personal protective equipment (PPE)."
+    },
+    {
+      "reference": "S3",
+      "wording": "Comply with environmental and sustainability regulations, standards, and guidance. Segregate resources for reuse, recycling and disposal."
+    },
+    {
+      "reference": "S4",
+      "wording": "Comply with industry regulations, standards, and guidance."
+    },
+    {
+      "reference": "S5",
+      "wording": "Read and interpret information from drawings and specifications."
+    },
+    {
+      "reference": "S6",
+      "wording": "Estimate and select required resources: For example, the quantity of bricks and blocks, mortar, wall ties and insulation."
+    },
+    {
+      "reference": "S7",
+      "wording": "Prepare and maintain a safe working area."
+    },
+    {
+      "reference": "S8",
+      "wording": "Select and use hand tools."
+    },
+    {
+      "reference": "S9",
+      "wording": "Maintain and store hand tools."
+    },
+    {
+      "reference": "S10",
+      "wording": "Set out brick and block cavity wall to given tolerances, including an opening."
+    },
+    {
+      "reference": "S11",
+      "wording": "Construct a stretcher bond brick and block cavity wall with return and opening to given tolerances, including installing a lintel with soldiers, brick and edge sill, closure around opening, insulation, fire stopping, cavity tray, damp proof course (DPC) and weep holes."
+    },
+    {
+      "reference": "S12",
+      "wording": "Apply joint finishes: For example, half round, flush, weather struck and recessed."
+    },
+    {
+      "reference": "S13",
+      "wording": "Set out and construct a simple brick solid wall with capping."
+    },
+    {
+      "reference": "S14",
+      "wording": "Gauge and hand mix mortar to ratio."
+    },
+    {
+      "reference": "S15",
+      "wording": "Measure and cut bricks and blocks using hand tools, to given tolerances."
+    },
+    {
+      "reference": "S16",
+      "wording": "Carry out a simple repair: For example, replacing damaged bricks."
+    },
+    {
+      "reference": "S17",
+      "wording": "Protect materials and finished work."
+    },
+    {
+      "reference": "S18",
+      "wording": "Verbally communicate with others, applying construction terminology."
+    },
+    {
+      "reference": "S19",
+      "wording": "Follow equity, diversity and inclusion guidance."
+    },
+    {
+      "reference": "S20",
+      "wording": "Applies team working principles to their own and the wider build team."
+    },
+    {
+      "reference": "S21",
+      "wording": "Identifies well-being support available to self and others."
+    },
+    {
+      "reference": "S22",
+      "wording": "Construct a brick wall with raking cut. For example, gable end wall or garden wall with raking cut."
+    }
+  ],
+  "behaviours": [
+    {
+      "reference": "B1",
+      "wording": "Put health, safety and wellbeing first."
+    },
+    {
+      "reference": "B2",
+      "wording": "Consider the environment when using resources and carrying out processes."
+    },
+    {
+      "reference": "B3",
+      "wording": "Take ownership of given work."
+    },
+    {
+      "reference": "B4",
+      "wording": "Contribute to an inclusive and diverse culture."
+    },
+    {
+      "reference": "B5",
+      "wording": "Seek learning and development opportunities."
+    },
+    {
+      "reference": "B6",
+      "wording": "Team-focus to meet team goals including, considering the wider build team."
+    }
+  ]
+}
