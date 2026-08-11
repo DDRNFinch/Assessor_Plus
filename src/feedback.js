@@ -1,23 +1,31 @@
 const tidy=value=>String(value??'').replace(/\s+/g,' ').trim();
-const list=(items,limit=3)=>items.slice(0,limit).map(tidy).filter(Boolean).join('; ');
+const lowerLead=value=>{const text=tidy(value).replace(/[.;:,]+$/,'');return text?text[0].toLowerCase()+text.slice(1):''};
+const meaning=items=>items.map(lowerLead).filter(Boolean).slice(0,2);
 
-/** Deterministic, offline feedback assembled only from fields in the assessment. */
+/** Deterministic, offline narrative assembled exclusively from recorded evidence. */
 export function generateFeedback(assessment,learner,unit){
-  const practical=assessment.selected?.practical||[], knowledge=assessment.selected?.knowledge||[];
-  const practicalText=list(assessment.selectedPracticalWording||[]);
-  const knowledgeText=list(assessment.selectedKnowledgeWording||[]);
-  const mapped=[...(assessment.mappings?.practical||[]),...(assessment.mappings?.knowledge||[])].filter(m=>m.decision==='automatic'||m.decision==='confirmed').length;
-  const further=/further evidence required/i.test(assessment.outcome||'');
-  const parts=[`${tidy(learner?.name)||'The learner'} was assessed through a practical observation for Unit ${tidy(unit?.id||assessment.primaryUnit)}${unit?.title?`, ${tidy(unit.title)}`:''}.`];
-  if(practical.length)parts.push(`The evidence recorded relates specifically to ${practical.length} selected practical assessment ${practical.length===1?'criterion':'criteria'}${practicalText?`: ${practicalText}`:'.'}`);
-  if(tidy(assessment.notes))parts.push(`The assessor recorded the following observation evidence: ${tidy(assessment.notes)}`);
-  if(mapped)parts.push(`The selected evidence also supports ${mapped} legitimate holistic ${mapped===1?'mapping':'mappings'} elsewhere in the qualification, through automatic or assessor-confirmed matching.`);
-  if(assessment.hasDiscussion){
-    if(knowledge.length)parts.push(`During the professional discussion, ${tidy(learner?.name)||'the learner'} provided evidence against ${knowledge.length} selected knowledge assessment ${knowledge.length===1?'criterion':'criteria'}${knowledgeText?`: ${knowledgeText}`:'.'}`);
-    if(tidy(assessment.discussionNotes))parts.push(`The discussion record states: ${tidy(assessment.discussionNotes)}`);
+  const name=tidy(learner?.name)||'the learner', unitId=tidy(unit?.id||assessment.primaryUnit), title=tidy(unit?.title);
+  const practical=meaning(assessment.selectedPracticalWording||[]), knowledge=meaning(assessment.selectedKnowledgeWording||[]);
+  const notes=tidy(assessment.notes), discussion=tidy(assessment.discussionNotes);
+  const accepted=[...(assessment.mappings?.practical||[]),...(assessment.mappings?.knowledge||[])].filter(m=>['automatic','confirmed'].includes(m.decision));
+  const photos=(assessment.media||[]).filter(x=>x.kind==='photo').length, videos=(assessment.media||[]).filter(x=>x.kind==='video').length;
+  const audio=(assessment.knowledgeEvidence||[]).filter(x=>x.kind==='audio').length, files=(assessment.knowledgeEvidence||[]).filter(x=>x.kind==='document').length;
+  const sentences=[`I observed ${name} carrying out work associated with Unit ${unitId}${title?`, ${title}`:''}.`];
+  if(practical.length)sentences.push(`The selected practical evidence showed how the learner addressed ${practical.join(' and ')}.`);
+  if(notes)sentences.push(`During the activity, I recorded that ${lowerLead(notes)}.`);
+  const media=[];if(photos)media.push(`${photos} ${photos===1?'photograph':'photographs'}`);if(videos)media.push(`${videos} ${videos===1?'video recording':'video recordings'}`);
+  if(media.length)sentences.push(`${media.join(' and ')} ${media.length===1&&photos===1?'was':'were'} retained to support what I observed.`);
+  if(assessment.hasDiscussion&&(knowledge.length||discussion||audio||files)){
+    let pd=`During the professional discussion, ${name} had the opportunity to explain`;
+    pd+=knowledge.length?` ${knowledge.join(' and ')}`:' the knowledge relevant to the selected criteria';
+    pd+=discussion?`; my record notes that ${lowerLead(discussion)}`:'';sentences.push(pd+'.');
+    const supporting=[];if(audio)supporting.push(`${audio} audio ${audio===1?'recording':'recordings'}`);if(files)supporting.push(`${files} supporting ${files===1?'file':'files'}`);
+    if(supporting.length)sentences.push(`${supporting.join(' and ')} ${supporting.length===1?'forms':'form'} part of the discussion evidence.`);
   }
-  if(further)parts.push('The assessment decision is Further evidence required. The evidence recorded is retained against the criteria identified, but it does not yet support a competent outcome for this assessment. Further evidence is required against the outstanding or identified areas recorded by the assessor.');
-  else if(assessment.outcome)parts.push(`The recorded assessment decision is ${tidy(assessment.outcome)}. This conclusion applies only to the assessment criteria selected and evidenced within this assessment; it does not indicate completion of the whole unit or qualification.`);
-  else parts.push('No final assessment decision has yet been recorded. This summary is limited to the selected evidence and should be reviewed when the assessor records the outcome.');
-  return parts.join('\n\n');
+  if(accepted.length)sentences.push(`The accepted evidence also provides a clear audit trail for ${accepted.length} holistic ${accepted.length===1?'mapping':'mappings'} to the learner's active units.`);
+  const further=/further evidence required/i.test(assessment.outcome||'');
+  if(further)sentences.push('The evidence above demonstrates the recorded aspects of the activity, but does not yet support a competent outcome. Further evidence required: additional evidence is needed for the outstanding areas identified in this assessment before competence can be confirmed.');
+  else if(assessment.outcome)sentences.push(`On the evidence recorded for the selected criteria, I was satisfied that the assessment outcome was ${tidy(assessment.outcome).toLowerCase()}. This judgement applies to this assessment only and does not claim completion of the whole unit or qualification.`);
+  else sentences.push('I have not recorded a final assessment outcome, so this narrative should be reviewed when the assessment decision is made.');
+  return sentences.join(' ');
 }
