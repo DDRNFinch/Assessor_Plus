@@ -1,5 +1,28 @@
-const DB='assessor-plus-v01',VERSION=2;let promise;
-export function openDB(){if(!promise)promise=new Promise((resolve,reject)=>{const r=indexedDB.open(DB,VERSION);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('learners'))d.createObjectStore('learners',{keyPath:'id'});if(!d.objectStoreNames.contains('assessments'))d.createObjectStore('assessments',{keyPath:'id'});if(!d.objectStoreNames.contains('media'))d.createObjectStore('media',{keyPath:'id'});if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'});if(!d.objectStoreNames.contains('profileAssets'))d.createObjectStore('profileAssets',{keyPath:'key'});if(!d.objectStoreNames.contains('professionalDocuments'))d.createObjectStore('professionalDocuments',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return promise;}
+const DB='assessor-plus-v01',VERSION=2;
+const STORES={learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id'};
+let promise;
+
+export function openDB(){
+ if(!promise)promise=new Promise((resolve,reject)=>{
+  const request=indexedDB.open(DB,VERSION);let settled=false;
+  const fail=error=>{if(settled)return;settled=true;promise=undefined;reject(error)};
+  request.onupgradeneeded=()=>{const db=request.result;for(const[name,keyPath]of Object.entries(STORES))if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath})};
+  request.onblocked=()=>fail(Object.assign(new Error('The Assessor+ data upgrade is blocked by another open app window.'),{name:'BlockedError'}));
+  request.onerror=()=>fail(request.error||new Error('IndexedDB could not be opened.'));
+  request.onsuccess=()=>{
+   if(settled){request.result.close();return}
+   settled=true;const db=request.result;
+   db.onversionchange=()=>{db.close();promise=undefined};
+   resolve(db);
+  };
+ }).catch(error=>{promise=undefined;throw error});
+ return promise;
+}
+
+/** Optional V0.5 profile data must never prevent core learner data from opening. */
+export async function optionalRead(read,fallback,label){
+ try{return await read()}catch(error){console.warn(`Assessor+ could not load optional ${label}.`,error);return fallback}
+}
 export async function all(store){const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(store).objectStore(store).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});}
 export async function get(store,key){const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(store).objectStore(store).get(key);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});}
 export async function put(store,value){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(value);tx.oncomplete=()=>res(value);tx.onerror=()=>rej(tx.error)});}
