@@ -1,5 +1,5 @@
 import {evidencedEntries} from './matrix.js';
-import {activeUnitIds} from './progress.js';
+import {activeUnitIds,validKsbEvidence} from './progress.js';
 import {formatUKDate} from './dates.js';
 
 const enc=new TextEncoder(), A4=[595.28,841.89], teal=[0,.56,.57], charcoal=[.10,.19,.21];
@@ -17,14 +17,17 @@ export function photoFit(width,height,boxWidth,boxHeight){const rotated=height>w
 
 export function assessmentPdfText(a,learner,course){
   if(course.course.courseType==='KSB'){
-    const selected=new Set(a.selectedKSBs||[]),skills=course.skills.filter(x=>selected.has(x.reference)),behaviours=course.behaviours.filter(x=>selected.has(x.reference));
-    const lines=['ASSESSOR+ V0.7.1','HOLISTIC OBSERVATION','Bricklayer','ST0095','Version 1.2','Level 2',`Observation reference: ${a.id}`,`Learner: ${learner.name}`,`Observation date: ${formatUKDate(a.date)}`,`Assessor: ${a.signatureSnapshot?.assessorName||a.assessor}`,(a.signatureSnapshot?.providerName||a.providerName)?`Provider: ${a.signatureSnapshot?.providerName||a.providerName}`:'','OBSERVATION NARRATIVE',a.notes||'No observation narrative recorded.','EVIDENCE FILES'];
-    for(const type of ['Video','Audio','Document']){const named=evidenceExportFiles(a).filter(x=>x.type===type);if(named.length)lines.push(type,...named.map(x=>x.name))}
-    lines.push('SKILLS',...skills.map(x=>`${x.reference} - ${x.wording}`),'BEHAVIOURS',...behaviours.map(x=>`${x.reference} - ${x.wording}`),'ASSESSOR FEEDBACK',a.feedback||'No assessor feedback recorded.','SIGNATURE',`Assessor name: ${a.signatureSnapshot?.assessorName||a.assessor||''}`,`Date signed: ${formatUKDate(a.signatureDate)}`);
+    const evidence=validKsbEvidence(a),skills=course.skills.filter(x=>evidence.some(e=>e.reference===x.reference)),behaviours=course.behaviours.filter(x=>evidence.some(e=>e.reference===x.reference)),knowledge=course.knowledge.filter(x=>evidence.some(e=>e.reference===x.reference));
+    const lines=['ASSESSOR+ V0.7.2','HOLISTIC OBSERVATION',`Qualification: ${course.course.title}`,`Observation reference: ${a.id}`,`Learner: ${learner.name}`,`Observation date: ${formatUKDate(a.date)}`,`Assessor: ${a.signatureSnapshot?.assessorName||a.assessor}`,(a.signatureSnapshot?.providerName||a.providerName)?`Provider: ${a.signatureSnapshot?.providerName||a.providerName}`:'','OBSERVATION NARRATIVE',a.notes||'No observation narrative recorded.'];
+    if(a.hasDiscussion)lines.push('PROFESSIONAL DISCUSSION',a.discussionNotes||'No discussion narrative recorded.');
+    lines.push('EVIDENCE FILES');for(const type of ['Video','Audio','Document']){const named=evidenceExportFiles(a).filter(x=>x.type===type);if(named.length)lines.push(type==='Document'?'Supporting files':type,...named.map(x=>x.name))}
+    lines.push('PRACTICAL EVIDENCE','Skills demonstrated',...skills.map(x=>`${x.reference} - ${x.wording}`),'Behaviours demonstrated',...behaviours.map(x=>`${x.reference} - ${x.wording}`),'THEORY EVIDENCE','Knowledge evidenced');
+    for(const k of knowledge){lines.push(`${k.reference} - ${k.wording}`);for(const method of [...new Set(evidence.filter(e=>e.reference===k.reference).map(e=>e.method))])lines.push(method)}
+    lines.push('ASSESSOR FEEDBACK',a.feedback||'No assessor feedback recorded.','SIGNATURE',`Assessor name: ${a.signatureSnapshot?.assessorName||a.assessor||''}`,`Date signed: ${formatUKDate(a.signatureDate)}`);
     return lines.filter(Boolean).join('\n');
   }
   const unit=course.units.find(u=>u.id===a.primaryUnit)||{id:a.primaryUnit,title:''},active=activeUnitIds(course,learner);
-  const lines=['ASSESSOR+ V0.7.1','OBSERVATION DETAILS',`Observation reference: ${a.id}`,`Learner: ${learner.name}`,`Qualification: ${course.course.title}`,`Primary Unit: ${unit.id} - ${unit.title.replace(new RegExp(`^Unit\\s+${unit.id}\\s*[-–:]?\\s*`,'i'),'')}`,`Assessment date: ${formatUKDate(a.date)}`,`Assessor: ${a.signatureSnapshot?.assessorName||a.assessor}`,(a.signatureSnapshot?.providerName||a.providerName)?`Provider: ${a.signatureSnapshot?.providerName||a.providerName}`:'','PRACTICAL OBSERVATION',a.notes||'No observation narrative recorded.'];
+  const lines=['ASSESSOR+ V0.7.2','OBSERVATION DETAILS',`Observation reference: ${a.id}`,`Learner: ${learner.name}`,`Qualification: ${course.course.title}`,`Primary Unit: ${unit.id} - ${unit.title.replace(new RegExp(`^Unit\\s+${unit.id}\\s*[-–:]?\\s*`,'i'),'')}`,`Assessment date: ${formatUKDate(a.date)}`,`Assessor: ${a.signatureSnapshot?.assessorName||a.assessor}`,(a.signatureSnapshot?.providerName||a.providerName)?`Provider: ${a.signatureSnapshot?.providerName||a.providerName}`:'','PRACTICAL OBSERVATION',a.notes||'No observation narrative recorded.'];
   if(a.hasDiscussion)lines.push('PROFESSIONAL DISCUSSION',a.discussionNotes||'No discussion narrative recorded.');
   lines.push('EVIDENCE FILES');for(const type of ['Video','Audio','Document']){const named=evidenceExportFiles(a).filter(x=>x.type===type);if(named.length)lines.push(type==='Document'?'Supporting documents':type,...named.map(x=>x.name))}lines.push('UNITS & ASSESSMENT CRITERIA MET');
   const entries=evidencedEntries(a).filter(e=>active.has(e.unit));
@@ -50,7 +53,7 @@ export async function makeProfessionalPdf(a,learner,course,{assetResolver=async(
   const dataUrl=a.signatureSnapshot?.dataUrl;let signature=null;if(dataUrl?.includes(',')){const raw=atob(dataUrl.split(',')[1]),arr=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);signature=await imageJpeg(new Blob([arr],{type:a.signatureSnapshot.type||'image/png'}))}
   const imageObj=image=>add(concat([enc.encode(`<< /Type /XObject /Subtype /Image /Width ${image.width} /Height ${image.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${image.data.length} >>\nstream\n`),image.data,enc.encode('\nendstream')]));
   const logoId=logo?imageObj(logo):null,sigId=signature?imageObj(signature):null,photoIds=new Map([...images].map(([id,data])=>[id,imageObj(data)]));
-  const pdfAssessment={...a,providerName:a.signatureSnapshot?.providerName||a.providerName||profile.providerName||''},sections=assessmentPdfText(pdfAssessment,learner,course).split('\n'),contentPages=[],evidenceAt=sections.indexOf('EVIDENCE FILES'),criteriaAt=Math.max(sections.indexOf('UNITS & ASSESSMENT CRITERIA MET'),sections.indexOf('SKILLS')),feedbackAt=sections.indexOf('ASSESSOR FEEDBACK');
+  const pdfAssessment={...a,providerName:a.signatureSnapshot?.providerName||a.providerName||profile.providerName||''},sections=assessmentPdfText(pdfAssessment,learner,course).split('\n'),contentPages=[],evidenceAt=sections.indexOf('EVIDENCE FILES'),criteriaAt=Math.max(sections.indexOf('UNITS & ASSESSMENT CRITERIA MET'),sections.indexOf('PRACTICAL EVIDENCE')),feedbackAt=sections.indexOf('ASSESSOR FEEDBACK');
   const addTextPages=(lines,limit=43)=>{let current=[];for(const line of lines){const wrapped=ascii(line).match(/.{1,86}(?:\s|$)|.{1,86}/g)||[''];if(current.length+wrapped.length>limit){contentPages.push(current);current=[]}current.push(...wrapped)}if(current.length)contentPages.push(current)};
   addTextPages(sections.slice(0,evidenceAt));
   const photoList=(a.media||[]).filter(x=>photoIds.has(x.id));for(let i=0;i<photoList.length;i+=PHOTOS_PER_PAGE)contentPages.push(photoList.slice(i,i+PHOTOS_PER_PAGE));

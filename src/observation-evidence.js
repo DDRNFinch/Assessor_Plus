@@ -1,9 +1,9 @@
 import {deriveMatrix} from './matrix.js';
-import {activeUnitIds,filterAssessmentToActiveUnits} from './progress.js';
+import {activeUnitIds,filterAssessmentToActiveUnits,validKsbEvidence} from './progress.js';
 import {DEFAULT_COURSE_ID} from './course.js';
 
 export function previousKsbEvidence(course,learner,assessments,currentAssessmentId=''){
- const map=new Map();for(const a of assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&a.id!==currentAssessmentId))for(const reference of a.selectedKSBs||[]){if(!map.has(reference))map.set(reference,[]);map.get(reference).push({assessmentId:a.id,method:'Holistic Observation',date:a.date})}return map;
+ const map=new Map();for(const a of assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&a.id!==currentAssessmentId))for(const item of validKsbEvidence(a)){if(!map.has(item.reference))map.set(item.reference,[]);map.get(item.reference).push({assessmentId:a.id,method:item.method,date:a.date})}return map;
 }
 
 /**
