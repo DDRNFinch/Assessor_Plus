@@ -4,14 +4,19 @@ let promise;
 
 export function openDB(){
  if(!promise)promise=new Promise((resolve,reject)=>{
-  const request=indexedDB.open(DB,VERSION);let settled=false;
-  const fail=error=>{if(settled)return;settled=true;promise=undefined;reject(error)};
+  const request=indexedDB.open(DB,VERSION);let settled=false,blockedTimer=null;
+  const clearBlockedTimer=()=>{if(blockedTimer){clearTimeout(blockedTimer);blockedTimer=null}};
+  const fail=error=>{if(settled)return;settled=true;clearBlockedTimer();promise=undefined;reject(error)};
   request.onupgradeneeded=()=>{const db=request.result;for(const[name,keyPath]of Object.entries(STORES))if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath})};
-  request.onblocked=()=>fail(Object.assign(new Error('The Assessor+ data upgrade is blocked by another open app window.'),{name:'BlockedError'}));
+  request.onblocked=()=>{
+   console.warn('Assessor+ is waiting for an older app window to release local data.');
+   clearBlockedTimer();
+   blockedTimer=setTimeout(()=>fail(Object.assign(new Error('The Assessor+ data upgrade is still blocked by another open app window.'),{name:'BlockedError'})),15000);
+  };
   request.onerror=()=>fail(request.error||new Error('IndexedDB could not be opened.'));
   request.onsuccess=()=>{
    if(settled){request.result.close();return}
-   settled=true;const db=request.result;
+   settled=true;clearBlockedTimer();const db=request.result;
    db.onversionchange=()=>{db.close();promise=undefined};
    resolve(db);
   };
@@ -33,7 +38,7 @@ export const nextId=(prefix,items)=>`${prefix}-${String(Math.max(0,...items.map(
 
 /** Targeted local deletion. Media is selected by assessmentId as well as metadata IDs so orphaned blobs cannot remain. */
 export async function deleteAssessmentCascade(assessmentId){
- const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['assessments','media'],'readwrite'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media');assessments.delete(assessmentId);const request=media.openCursor();request.onsuccess=()=>{const cursor=request.result;if(!cursor)return;const value=cursor.value;if(value.assessmentId===assessmentId)cursor.delete();cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
+ const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['assessments','media'],'readwrite'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media');assessments.delete(assessmentId);const request=media.openCursor();request.onsuccess=()=>{const cursor=request.result;if(!cursor)return;const value=cursor.value;if(value.assessmentId===assessmentId)cursor.delete();cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
 }
 export async function deleteLearnerCascade(learnerId){
  const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['learners','assessments','media','reviews','visits'],'readwrite'),learners=tx.objectStore('learners'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media'),reviews=tx.objectStore('reviews'),visits=tx.objectStore('visits'),assessmentIds=new Set();learners.delete(learnerId);const vr=visits.openCursor();vr.onsuccess=()=>{const cursor=vr.result;if(!cursor)return;if(cursor.value.learnerId===learnerId)cursor.delete();cursor.continue()};const rr=reviews.openCursor();rr.onsuccess=()=>{const cursor=rr.result;if(!cursor)return;if(cursor.value.learnerId===learnerId)cursor.delete();cursor.continue()};const ar=assessments.openCursor();ar.onsuccess=()=>{const cursor=ar.result;if(!cursor){const mr=media.openCursor();mr.onsuccess=()=>{const item=mr.result;if(!item)return;if(assessmentIds.has(item.value.assessmentId))item.delete();item.continue()};return}if(cursor.value.learnerId===learnerId){assessmentIds.add(cursor.value.id);cursor.delete()}cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
