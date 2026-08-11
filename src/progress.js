@@ -2,10 +2,10 @@ import {availableUnits,flattenCourse,DEFAULT_COURSE_ID,isKsbCourse,activeKSBs} f
 import {deriveMatrix} from './matrix.js';
 
 export function validKsbEvidence(assessment){
- const evidence=[];
- for(const reference of assessment.selectedKSBs||[])if(/^S\d+$|^B\d+$/.test(reference))evidence.push({reference,method:'Holistic Observation'});
- if(assessment.hasDiscussion)for(const reference of assessment.theoryKnowledge?.professionalDiscussion||[])if(/^K\d+$/.test(reference))evidence.push({reference,method:'Professional Discussion'});
- for(const file of assessment.knowledgeEvidence||[])if(file.kind==='document')for(const reference of file.knowledgeKSBs||[])if(/^K\d+$/.test(reference))evidence.push({reference,method:'Supporting File'});
+ const evidence=[],seen=new Set(),add=(reference,method)=>{const key=`${reference}|${method}`;if(!seen.has(key)){seen.add(key);evidence.push({reference,method})}};
+ for(const reference of assessment.selectedKSBs||[])if(/^S\d+$|^B\d+$/.test(reference))add(reference,'Holistic Observation');
+ if(assessment.hasDiscussion)for(const reference of assessment.theoryKnowledge?.professionalDiscussion||[])if(/^K\d+$/.test(reference))add(reference,'Professional Discussion');
+ for(const file of assessment.knowledgeEvidence||[])if(file.kind==='document')for(const reference of file.knowledgeKSBs||[])if(/^K\d+$/.test(reference))add(reference,'Supporting File');
  return evidence;
 }
 
