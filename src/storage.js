@@ -1,5 +1,5 @@
 const DB='assessor-plus-v01',VERSION=4;
-const STORES={learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id',reviews:'id',visits:'id'};
+export const STORES=Object.freeze({learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id',reviews:'id',visits:'id'});
 let promise;
 
 export function openDB(){
@@ -27,6 +27,8 @@ export async function all(store){const db=await openDB();return new Promise((res
 export async function get(store,key){const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(store).objectStore(store).get(key);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});}
 export async function put(store,value){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(value);tx.oncomplete=()=>res(value);tx.onerror=()=>rej(tx.error)});}
 export async function remove(store,key){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).delete(key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});}
+export async function readAllStores(){const entries=await Promise.all(Object.keys(STORES).map(async name=>[name,await all(name)]));return Object.fromEntries(entries)}
+
 export const nextId=(prefix,items)=>`${prefix}-${String(Math.max(0,...items.map(x=>Number(x.id?.split('-')[1])||0))+1).padStart(4,'0')}`;
 
 /** Targeted local deletion. Media is selected by assessmentId as well as metadata IDs so orphaned blobs cannot remain. */
