@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 const read=file=>readFile(file,'utf8');
 const json=async file=>JSON.parse(await read(file));
 
-test('V0.7.3 qualification display titles are exact and optional units remain separate',async()=>{
+test('V0.7.4 qualification display titles are exact and optional units remain separate',async()=>{
  const [l2,l3,ksb,app]=await Promise.all([json('level2-trowel-6570-04-FULL-course-data.json'),json('level3-trowel-6570-05-FULL-course-data.json'),json('bricklayer-st0095-v1.2-course-data.json'),read('src/app.js')]);
  assert.equal(l2.course.title,'Trowel Occupations - City & Guilds - 6570-04 - Level 2');
  assert.equal(l3.course.title,'Trowel Occupations - City & Guilds - 6570-05 - Level 3');
@@ -13,7 +13,7 @@ test('V0.7.3 qualification display titles are exact and optional units remain se
  const l3base=JSON.parse((await import('node:child_process')).execFileSync('git',['show','HEAD:level3-trowel-6570-05-FULL-course-data.json'],{encoding:'utf8'}));
  assert.deepEqual(l2.course.optionalUnitIds,l2base.course.optionalUnitIds);
  assert.deepEqual(l3.course.optionalUnitIds,l3base.course.optionalUnitIds);
- assert.match(app,/course\.course\.title[\s\S]*Optional Unit/);
+ assert.doesNotMatch(app,/<small>Optional Unit/);
  assert.doesNotMatch(app,/course\.course\.title\s*\+\s*.*optionalUnit/);
 });
 
@@ -41,10 +41,10 @@ test('new back controls protect only genuinely unsaved observation work',async()
  assert.match(app,/go\('learnerProfile',learnerId\)/);
 });
 
-test('V0.7.3 metadata, build and all offline qualifications are consistent',async()=>{
+test('V0.7.4 metadata, build and all offline qualifications are consistent',async()=>{
  const [pkg,manifest,index,sw,build]=await Promise.all(['package.json','manifest.webmanifest','index.html','sw.js','scripts/build.js'].map(read));
- assert.equal(JSON.parse(pkg).version,'0.7.3'); assert.equal(JSON.parse(manifest).version,'0.7.3');
- assert.match(index,/V0\.7\.3/); assert.match(build,/V0\.7\.3/);
- assert.match(sw,/const CACHE='assessor-plus-v0\.7\.3'/);
+ assert.equal(JSON.parse(pkg).version,'0.7.4'); assert.equal(JSON.parse(manifest).version,'0.7.4');
+ assert.match(index,/V0\.7\.4/); assert.match(build,/V0\.7\.4/);
+ assert.match(sw,/const CACHE='assessor-plus-v0\.7\.4'/);
  for(const file of ['level2-trowel-6570-04-FULL-course-data.json','level3-trowel-6570-05-FULL-course-data.json','bricklayer-st0095-v1.2-course-data.json']){assert.match(sw,new RegExp(file.replaceAll('.','\\.')));assert.match(build,new RegExp(file.replaceAll('.','\\.')))}
 });

@@ -1,0 +1,453 @@
+{
+  "course": {
+    "id": "st0264-v1.4-carpentry-joinery",
+    "courseId": "st0264-v1.4-carpentry-joinery",
+    "courseType": "KSB",
+    "title": "Carpentry and Joinery - ST0264 - Version 1.4 - Level 2",
+    "reference": "ST0264",
+    "version": "1.4",
+    "level": 2,
+    "pathways": [
+      {
+        "id": "site-carpentry",
+        "title": "Site Carpentry",
+        "knowledge": [
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "K5",
+          "K6",
+          "K7",
+          "K8",
+          "K9",
+          "K10",
+          "K11",
+          "K12",
+          "K13",
+          "K14",
+          "K15",
+          "K16",
+          "K17",
+          "K18",
+          "K19",
+          "K20",
+          "K21",
+          "K22",
+          "K23",
+          "K24",
+          "K25",
+          "K26",
+          "K27",
+          "K28",
+          "K29",
+          "K40"
+        ],
+        "skills": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8",
+          "S9",
+          "S10",
+          "S11",
+          "S12",
+          "S13",
+          "S14",
+          "S15",
+          "S16",
+          "S17",
+          "S18",
+          "S19",
+          "S20",
+          "S21",
+          "S22"
+        ],
+        "behaviours": [
+          "B1",
+          "B2",
+          "B3",
+          "B4",
+          "B5"
+        ]
+      },
+      {
+        "id": "architectural-joinery",
+        "title": "Architectural Joinery",
+        "knowledge": [
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "K5",
+          "K6",
+          "K7",
+          "K8",
+          "K9",
+          "K10",
+          "K11",
+          "K12",
+          "K13",
+          "K14",
+          "K15",
+          "K16",
+          "K17",
+          "K18",
+          "K19",
+          "K20",
+          "K30",
+          "K31",
+          "K32",
+          "K33",
+          "K34",
+          "K35",
+          "K36",
+          "K37",
+          "K38",
+          "K39",
+          "K40"
+        ],
+        "skills": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S8",
+          "S9",
+          "S10",
+          "S11",
+          "S12",
+          "S13",
+          "S23",
+          "S24",
+          "S25",
+          "S26",
+          "S27",
+          "S28",
+          "S29",
+          "S30"
+        ],
+        "behaviours": [
+          "B1",
+          "B2",
+          "B3",
+          "B4",
+          "B5"
+        ]
+      }
+    ]
+  },
+  "knowledge": [
+    {
+      "reference": "K1",
+      "wording": "Awareness of health and safety regulations, standards, and guidance and impact on role. Control of Substances Hazardous to Health (CoSHH). Fire safety. Health and Safety at Work Act. Asbestos awareness. Manual handling. signage, fire extinguishers. Safety signage. Situational awareness. Slips, trips, and falls. Working in confined spaces. Working at height. Provision and use of work equipment regulations (PUWER) and Electrical safety."
+    },
+    {
+      "reference": "K2",
+      "wording": "Safety control equipment and how to use personal protective equipment (PPE) respiratory protective equipment (RPE) and local exhaust ventilation (LEV)."
+    },
+    {
+      "reference": "K3",
+      "wording": "Safe systems of work: Site inductions, tool box talks, risk assessments, method statements and hazard identification in the work area."
+    },
+    {
+      "reference": "K4",
+      "wording": "Impact of the sector on the environment: Efficient use of resources. Recycling, reuse, safe disposal of waste and sustainable forestry."
+    },
+    {
+      "reference": "K5",
+      "wording": "Principles of building and modern methods of construction: Foundations, roofs, walls, damp proof courses, floors, timber frame, structurally insulated panels (SIPS) utilities and services, internal plaster finishes, insulation, fire protection, moisture and air protection and quality of materials."
+    },
+    {
+      "reference": "K6",
+      "wording": "Basic principles of digital design and modelling systems."
+    },
+    {
+      "reference": "K7",
+      "wording": "Standards and regulations associated with carpentry activities: British standards, building regulations and warranty provider standards."
+    },
+    {
+      "reference": "K8",
+      "wording": "Methods of interpreting and extracting relevant information from drawings and specifications."
+    },
+    {
+      "reference": "K9",
+      "wording": "Materials and their characteristics of home grown and imported timber and timber-based products. Natural timber products: Hardwood and softwood. Manufactured timber products: Board, laminated timber and carcassing."
+    },
+    {
+      "reference": "K10",
+      "wording": "Timber decay and repair methods: Timber moisture content parameters for a range of timber and timber-based materials, wet rot and dry rot, and insect attack."
+    },
+    {
+      "reference": "K11",
+      "wording": "Carpentry and joinery products and purpose: Mastics, preservatives, wood fillers, plastics and ironmongery."
+    },
+    {
+      "reference": "K12",
+      "wording": "Basic material estimation techniques, calculating lengths of timber, fixing requirements and a cutting list production methods."
+    },
+    {
+      "reference": "K13",
+      "wording": "Verbal communication techniques and construction terminology."
+    },
+    {
+      "reference": "K14",
+      "wording": "Hand tool use and storage methods and techniques: Chisels, planes, hand saws, hammers, squares, tri-square, bevels, marking and mortise gauges, spirit levels."
+    },
+    {
+      "reference": "K15",
+      "wording": "Hand tool maintenance and sharpening techniques."
+    },
+    {
+      "reference": "K16",
+      "wording": "Jig production techniques."
+    },
+    {
+      "reference": "K17",
+      "wording": "Power tools use and storage methods and techniques: Portable circular saws, drills, saws, planers, routers, sanders, multi-functional tools and nail guns."
+    },
+    {
+      "reference": "K18",
+      "wording": "Principles of good team working."
+    },
+    {
+      "reference": "K19",
+      "wording": "Inclusion, equity and diversity in the workplace."
+    },
+    {
+      "reference": "K20",
+      "wording": "Well-being: Mental and physical health considerations in self and others and how to access support."
+    },
+    {
+      "reference": "K21",
+      "wording": "Site carpentry techniques: Measuring, marking out, fitting, cutting (straight and angled) and mitring."
+    },
+    {
+      "reference": "K22",
+      "wording": "Site carpentry: Structural fixtures and timber sizing in site carpentry, how to use sizing tables."
+    },
+    {
+      "reference": "K23",
+      "wording": "Site Carpenter: Timber sizing tables purpose and use."
+    },
+    {
+      "reference": "K24",
+      "wording": "Site carpentry: Timber splicing and scribing techniques."
+    },
+    {
+      "reference": "K25",
+      "wording": "Site carpentry: Straight roof installation techniques: Basic rafter trussed (prefabricated) and traditional cut roof (built on site)."
+    },
+    {
+      "reference": "K26",
+      "wording": "Site carpentry: Flat roofs: Warm and cold flat roofs including firings and coverings."
+    },
+    {
+      "reference": "K27",
+      "wording": "Site carpentry: First fixing installation techniques: Structural carcassing (load bearing studwork), floor joists and coverings, straight flights of stairs, metal and timber stud partitions."
+    },
+    {
+      "reference": "K28",
+      "wording": "Site carpentry: Second fix installation techniques: Service encasement, cladding, wall and floor units and fitments, window boards, handrails and spindles to straight flights of stairs, doors and mouldings (architrave and skirting board)."
+    },
+    {
+      "reference": "K29",
+      "wording": "Site carpentry: Types, use, calibration and storage of laser levels."
+    },
+    {
+      "reference": "K30",
+      "wording": "Architectural joiner: Requirements of fire door assemblies."
+    },
+    {
+      "reference": "K31",
+      "wording": "Architectural joiner: Safe use of fixed machinery, inspection, preparation and operation techniques: Crosscut saw, band saw, planer and thicknesser and mortiser."
+    },
+    {
+      "reference": "K32",
+      "wording": "Architectural joiner: Setting out and marking out techniques for joinery product manufacture and potential effects of marking out errors."
+    },
+    {
+      "reference": "K33",
+      "wording": "Architectural joiner: Timber joints, types and production techniques: Dovetails, mortise and tenon, bridals and halvings."
+    },
+    {
+      "reference": "K34",
+      "wording": "Architectural joiner: Manufacture and assembly techniques for standard right angled timber windows."
+    },
+    {
+      "reference": "K35",
+      "wording": "Architectural joiner: Connection methods in joinery: Dowels, biscuit, staples and adhesives."
+    },
+    {
+      "reference": "K36",
+      "wording": "Architectural joiner: Manufacture and assembly techniques for timber first fix products: 1. straight staircases 2. door frames and linings."
+    },
+    {
+      "reference": "K37",
+      "wording": "Architectural joiner: Manufacture and assembly techniques for second fix timber products: 1. timber wall and floor units 2. timber doors 3. timber mouldings."
+    },
+    {
+      "reference": "K38",
+      "wording": "Architectural joiner: Finishing techniques for manufactured timber products: Sanding, painting, waxing, polishing, oiling and applying preservative."
+    },
+    {
+      "reference": "K39",
+      "wording": "Architectural joiner: Ironmongery installation techniques."
+    },
+    {
+      "reference": "K40",
+      "wording": "Employment types (self employed and employed), small business start up principles and tax."
+    }
+  ],
+  "skills": [
+    {
+      "reference": "S1",
+      "wording": "Comply with health and safety regulations, standards, and guidance."
+    },
+    {
+      "reference": "S2",
+      "wording": "Identify and use safety control equipment, for example, RPE, dust suppression, PPE and LEV."
+    },
+    {
+      "reference": "S3",
+      "wording": "Comply with environmental and sustainability regulations, standards, and guidance. Segregate resources for reuse, recycling and disposal."
+    },
+    {
+      "reference": "S4",
+      "wording": "Comply with industry regulations, standards, and guidance."
+    },
+    {
+      "reference": "S5",
+      "wording": "Prepare and maintain a safe working area."
+    },
+    {
+      "reference": "S6",
+      "wording": "Interpret and use information from drawings and specifications."
+    },
+    {
+      "reference": "S7",
+      "wording": "Estimate required materials and produce a cutting list."
+    },
+    {
+      "reference": "S8",
+      "wording": "Verbally communicate with others, applying construction terminology."
+    },
+    {
+      "reference": "S9",
+      "wording": "Select, use and store hand tools."
+    },
+    {
+      "reference": "S10",
+      "wording": "Select, use and store power tools."
+    },
+    {
+      "reference": "S11",
+      "wording": "Maintain and sharpen hand tools."
+    },
+    {
+      "reference": "S12",
+      "wording": "Produce jigs."
+    },
+    {
+      "reference": "S13",
+      "wording": "Identifies well-being support available to self and others."
+    },
+    {
+      "reference": "S14",
+      "wording": "Site carpenter: Apply first fix techniques and practices for: 1. structural carcassing (load bearing studwork), 2. straight timber or metal partition walls, 3. floor joists 4. floor joist coverings and 5. straight flights of stairs."
+    },
+    {
+      "reference": "S15",
+      "wording": "Site carpenter: Install structural fixings."
+    },
+    {
+      "reference": "S16",
+      "wording": "Site carpenter: Size timber from sizing tables."
+    },
+    {
+      "reference": "S17",
+      "wording": "Site carpenter: Apply site second fix techniques and practices for: 1. service encasement, 2. cladding 3. wall and floor units and fitments, 4. handrails and spindles to straight flights of stairs, 5. internal and external doors, 6. skirting boards and architrave, 7. window boards."
+    },
+    {
+      "reference": "S18",
+      "wording": "Site carpenter: Apply site carpenter techniques and practices to construction of rafter roofs, including trussed (prefabricated) and traditional (built on site) including the construction of verge, eaves and fitting loft access."
+    },
+    {
+      "reference": "S19",
+      "wording": "Site carpenter: Use and store laser levels for example cross line laser."
+    },
+    {
+      "reference": "S20",
+      "wording": "Site carpenter: Form connections, for example, using joints, nails, screws, bolts and adhesive."
+    },
+    {
+      "reference": "S21",
+      "wording": "Site carpenter: Apply measuring, marking out, cutting (square and angled), mitring, hinging and recessing techniques."
+    },
+    {
+      "reference": "S22",
+      "wording": "Site carpenter: Carrying out splicing and scribing techniques."
+    },
+    {
+      "reference": "S23",
+      "wording": "Architectural joiner: Produce setting out details, including setting rods, and mark out for timber products."
+    },
+    {
+      "reference": "S24",
+      "wording": "Architectural joiner: Produce basic woodworking joints including dovetail, bridal, mortise and tenon and halving."
+    },
+    {
+      "reference": "S25",
+      "wording": "Architectural joiner: Form connections using dowels, biscuit, staples and adhesives."
+    },
+    {
+      "reference": "S26",
+      "wording": "Architectural joiner: Apply techniques and practices to the manufacture and assembly of a timber window with casement including glazing rebates and associated ironmongery."
+    },
+    {
+      "reference": "S27",
+      "wording": "Architectural joiner: Apply manufacture and assembly techniques for first fix products: 1. straight staircases, 2. door frames and linings."
+    },
+    {
+      "reference": "S28",
+      "wording": "Architectural joiner: Apply manufacture and assembly techniques for second fix products: 1. timber doors, 2. wall and floor units, 3. timber mouldings, 4. staircase spindles and balustrades."
+    },
+    {
+      "reference": "S29",
+      "wording": "Architectural joiner: Fit ironmongery including door locks, door handles, door hinges, latches and draw runners."
+    },
+    {
+      "reference": "S30",
+      "wording": "Architectural joiner: Inspect, prepare and operate fixed machinery."
+    }
+  ],
+  "behaviours": [
+    {
+      "reference": "B1",
+      "wording": "Put health, safety and wellbeing first."
+    },
+    {
+      "reference": "B2",
+      "wording": "Consider the environment when using resources and carrying out processes."
+    },
+    {
+      "reference": "B3",
+      "wording": "Contribute to an inclusive and diverse culture."
+    },
+    {
+      "reference": "B4",
+      "wording": "Seek learning and development opportunities."
+    },
+    {
+      "reference": "B5",
+      "wording": "Team-focus to meet team goals including, considering the wider build team."
+    }
+  ]
+}

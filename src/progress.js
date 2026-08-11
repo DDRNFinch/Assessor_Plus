@@ -1,4 +1,4 @@
-import {availableUnits,flattenCourse,DEFAULT_COURSE_ID,isKsbCourse} from './course.js';
+import {availableUnits,flattenCourse,DEFAULT_COURSE_ID,isKsbCourse,activeKSBs} from './course.js';
 import {deriveMatrix} from './matrix.js';
 
 export function validKsbEvidence(assessment){
@@ -20,8 +20,8 @@ export const filterAssessmentToActiveUnits=(assessment,course,learner)=>{
 };
 
 export function deriveKsbProgress(course,learner,assessments){
- const saved=assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id),selected=new Set(saved.flatMap(a=>validKsbEvidence(a).map(x=>x.reference)));
- const group=collection=>({assessed:course[collection].filter(x=>selected.has(x.reference)).length,total:course[collection].length});
+ const saved=assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&(!learner.pathwayId||a.pathwayId===learner.pathwayId)),selected=new Set(saved.flatMap(a=>validKsbEvidence(a).map(x=>x.reference)));
+ const group=collection=>{const rows=activeKSBs(course,learner,collection);return{assessed:rows.filter(x=>selected.has(x.reference)).length,total:rows.length}};
  const knowledge=group('knowledge'),skills=group('skills'),behaviours=group('behaviours');
  return{knowledge,skills,behaviours,overall:{assessed:knowledge.assessed+skills.assessed+behaviours.assessed,total:knowledge.total+skills.total+behaviours.total}};
 }
