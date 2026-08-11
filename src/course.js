@@ -12,7 +12,7 @@ export function validateCourse(course){
  return {valid:errors.length===0,counts,errors};
 }
 export function validateKsbCourse(course){
- const errors=[],identity={id:'st0095-v1.2-bricklayer',courseId:'st0095-v1.2-bricklayer',courseType:'KSB',title:'Bricklayer',reference:'ST0095',version:'1.2',level:2,typicalDurationMonths:24};
+ const errors=[],identity={id:'st0095-v1.2-bricklayer',courseId:'st0095-v1.2-bricklayer',courseType:'KSB',title:'Bricklayer - ST0095 - Version 1.2 - Level 2',reference:'ST0095',version:'1.2',level:2,typicalDurationMonths:24};
  for(const [field,want] of Object.entries(identity))if(course?.course?.[field]!==want)errors.push(`${field}: expected ${want}, found ${course?.course?.[field]}`);
  const expected={knowledge:31,skills:22,behaviours:6},all=[];
  for(const [collection,count] of Object.entries(expected)){const rows=course?.[collection]||[];if(rows.length!==count)errors.push(`${collection}: expected ${count}, found ${rows.length}`);const prefix=collection[0].toUpperCase();for(let i=1;i<=count;i++)if(!rows.some(x=>x.reference===`${prefix}${i}`))errors.push(`Missing ${prefix}${i}`);all.push(...rows)}

@@ -1,6 +1,6 @@
 /** Additive V0.3 record helpers. They deliberately tolerate legacy V0.1/V0.2 records. */
 export function normaliseAssessment(a){
-  a.media??=[];a.knowledgeEvidence??=[];a.assessor??='';
+  a.media??=[];a.knowledgeEvidence??=[];a.theoryKnowledge??={professionalDiscussion:[],supportingFiles:[]};a.theoryKnowledge.professionalDiscussion??=[];a.theoryKnowledge.supportingFiles??=[];a.assessor??='';
   a.signatureSnapshot??=null;a.signatureDate??='';
   return a;
 }
