@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import course from '../level3-trowel-6570-05-FULL-course-data.json' with {type:'json'};
+import {deriveUnitProgress} from '../src/progress.js';
+import {compareWordings} from '../src/word-comparison.js';
+import {generateMappings} from '../src/mapping.js';
+const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
+
+test('compact selector displays deriveUnitProgress percentage and keeps observed units selectable',async()=>{const app=await read('src/app.js'),start=app.slice(app.indexOf('function setup('),app.indexOf('\nfunction criterionRows'));assert.match(start,/progress=deriveUnitProgress\(course,l,assessments\)/);assert.match(start,/conciseUnitTitle\(p\.unit\.title\)/);assert.match(start,/p\.percentage}%/);assert.match(start,/p\.observed\?'<small class=observed>OBSERVED ✓/);assert.match(start,/type=radio name=unit/);assert.doesNotMatch(start,/type=radio[^>]*disabled/)});
+
+test('selector progress preserves primary-observation semantics and active optional filtering',()=>{const learner={id:'learner',optionalUnitId:course.course.optionalUnitIds[0]},active=deriveUnitProgress(course,learner,[{id:'OBS-1',learnerId:'learner',primaryUnit:course.course.mandatoryUnitIds[0],selected:{practical:[],knowledge:[]},mappings:{practical:[],knowledge:[]}}]);assert.deepEqual(active.map(row=>row.unit.id),[...course.course.mandatoryUnitIds,learner.optionalUnitId]);assert.equal(active.find(row=>row.unit.id===course.course.mandatoryUnitIds[0]).observed,true);assert.equal(active.find(row=>row.unit.id===learner.optionalUnitId).observed,false);for(const inactive of course.course.optionalUnitIds.filter(id=>id!==learner.optionalUnitId))assert.ok(!active.some(row=>row.unit.id===inactive))});
+
+test('word comparison is case/punctuation insensitive, occurrence aware and preserves wording',()=>{const primary='Lay brick, brick — SAFELY.',possible='lay brick safely!',compared=compareWordings(primary,possible);assert.equal(compared.primary.map(part=>part.text).join(''),primary);assert.equal(compared.possible.map(part=>part.text).join(''),possible);assert.equal(compared.primary.filter(part=>part.text.toLowerCase()==='brick').map(part=>part.kind).join(','),'matching,different');assert.equal(compared.primary.find(part=>part.text==='SAFELY').kind,'matching');assert.ok(compared.primary.some(part=>part.kind==='punctuation'&&part.text.includes('—')))});
+
+test('word comparison presentation leaves authoritative mapping scores and thresholds unchanged',async()=>{const before=generateMappings(course),app=await read('src/app.js'),mapping=await read('src/mapping.js');compareWordings('Install masonry safely.','install MASONRY safely!');assert.deepEqual(generateMappings(course),before);assert.match(mapping,/score<\.4/);assert.match(mapping,/score>=\.7\?'automatic':'confirm'/);assert.equal(before.filter(row=>row.mappingType==='automatic').length,1468);assert.equal(before.filter(row=>row.mappingType==='confirm').length,388);assert.match(app,/PRIMARY AC/);assert.match(app,/POSSIBLE MATCH/);assert.match(app,/Matching wording/);assert.match(app,/Different wording/)});
+
+test('V0.6.1 release identifiers and unique cache agree exactly',async()=>{const [index,pkg,manifest,pdf,build,sw]=await Promise.all(['index.html','package.json','manifest.webmanifest','src/pdf.js','scripts/build.js','sw.js'].map(read));assert.match(index,/V0\.6\.1/);assert.equal(JSON.parse(pkg).version,'0.6.1');assert.equal(JSON.parse(manifest).version,'0.6.1');assert.match(pdf,/ASSESSOR\+ V0\.6\.1/);assert.match(build,/Built Assessor\+ V0\.6\.1/);assert.match(sw,/const CACHE='assessor-plus-v0\.6\.1'/);assert.doesNotMatch(sw,/date-hotfix/)});
