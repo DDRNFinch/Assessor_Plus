@@ -10,10 +10,10 @@ const read=path=>readFile(new URL(path,root),'utf8');
 
 test('V0.6 release metadata, shell and offline cache are consistent',async()=>{
   const [pkg,index,manifest,sw,app]=await Promise.all([read('package.json'),read('index.html'),read('manifest.webmanifest'),read('sw.js'),read('src/app.js')]);
-  assert.equal(JSON.parse(pkg).version,'0.6.2');
-  assert.match(index,/V0\.6\.2/);
-  assert.equal(JSON.parse(manifest).version,'0.6.2');
-  assert.match(sw,/assessor-plus-v0\.6\.2/);
+  assert.equal(JSON.parse(pkg).version,'0.6.3');
+  assert.match(index,/V0\.6\.3/);
+  assert.equal(JSON.parse(manifest).version,'0.6.3');
+  assert.match(sw,/assessor-plus-v0\.6\.3/);
   assert.match(sw,/src\/feedback\.js/);
   assert.match(app,/beforeinstallprompt/);
   assert.match(app,/display-mode: standalone/);
@@ -59,7 +59,7 @@ test('saved edited feedback is emitted verbatim into PDF text',()=>{
 
 test('compact UI wires details, pending decisions, ignored review and replacement confirmation',async()=>{
   const app=await read('src/app.js');
-  assert.match(app,/data-detail/);assert.match(app,/map-chip pending/);assert.match(app,/data-sheet-decision/);assert.match(app,/Review ignored/);assert.match(app,/Replace your current feedback/);
+  assert.match(app,/data-detail/);assert.match(app,/map-chip pending/);assert.match(app,/data-sheet-decision/);assert.match(app,/Review ignored/);assert.doesNotMatch(app,/Replace your current feedback|data-generate/);
   const index=await read('index.html');
   const nav=index.match(/<nav class="bottom-nav"[\s\S]*?<\/nav>/)[0];
   assert.match(nav,/>Learners</);assert.match(nav,/>Assessments</);assert.doesNotMatch(nav,/Home|Reviews|Settings|Admin/);
