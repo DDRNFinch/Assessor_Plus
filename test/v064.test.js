@@ -58,7 +58,7 @@ test('AC presentation has subtle evidenced, outstanding and stronger selectable 
 test('media controls hide but retain native inputs, attributes, handlers and existing previews',async()=>{
  const [app,css,pkg]=await Promise.all([read('src/app.js'),read('styles.css'),read('package.json')]);
  for(const label of ['Camera','Video','Gallery','Record Audio','Files'])assert.match(app,new RegExp(label));
- assert.equal((app.match(/class=\"visually-hidden practical-media\" type=file/g)||[]).length,3);
+ assert.equal((app.match(/class=\"visually-hidden practical-media\" type=file/g)||[]).length,6);
  assert.match(app,/accept=\"image\/\*\" capture=environment/);
  assert.match(app,/accept=\"video\/\*\" capture=environment/);
  assert.match(app,/accept=\"image\/\*,video\/\*\" multiple/);
@@ -76,8 +76,8 @@ test('media controls hide but retain native inputs, attributes, handlers and exi
  assert.doesNotMatch(pkg,/fontawesome|lucide|heroicons/i);
 });
 
-test('V0.7.0 cache includes the evidence projection module',async()=>{
+test('V0.7.1 cache includes the evidence projection module',async()=>{
  const sw=await read('sw.js');
- assert.match(sw,/assessor-plus-v0\.7\.0/);
+ assert.match(sw,/assessor-plus-v0\.7\.1/);
  assert.match(sw,/\.\/src\/observation-evidence\.js/);
 });

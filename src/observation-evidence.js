@@ -2,6 +2,10 @@ import {deriveMatrix} from './matrix.js';
 import {activeUnitIds,filterAssessmentToActiveUnits} from './progress.js';
 import {DEFAULT_COURSE_ID} from './course.js';
 
+export function previousKsbEvidence(course,learner,assessments,currentAssessmentId=''){
+ const map=new Map();for(const a of assessments.filter(a=>a.learnerId===learner.id&&a.courseId===course.course.id&&a.id!==currentAssessmentId))for(const reference of a.selectedKSBs||[]){if(!map.has(reference))map.set(reference,[]);map.get(reference).push({assessmentId:a.id,method:'Holistic Observation',date:a.date})}return map;
+}
+
 /**
  * Project the existing authoritative Evidence Matrix onto the learner's active
  * qualification. The current observation is excluded because this is guidance
