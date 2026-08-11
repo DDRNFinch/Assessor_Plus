@@ -1,4 +1,4 @@
-const CACHE='assessor-plus-v0.4';
+const CACHE='assessor-plus-v0.5';
 const ASSETS=['./','./index.html','./styles.css','./manifest.webmanifest','./assessor-plus-192.png','./assessor-plus-512.png','./assessor-plus-maskable-192.png','./assessor-plus-maskable-512.png','./src/app.js','./src/course.js','./src/mapping.js','./src/matrix.js','./src/storage.js','./src/evidence.js','./src/pdf.js','./src/progress.js','./src/feedback.js','./level3-trowel-6570-05-FULL-course-data.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('assessor-plus-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
