@@ -10,10 +10,10 @@ const read=path=>readFile(new URL(path,root),'utf8');
 
 test('V0.6 release metadata, shell and offline cache are consistent',async()=>{
   const [pkg,index,manifest,sw,app]=await Promise.all([read('package.json'),read('index.html'),read('manifest.webmanifest'),read('sw.js'),read('src/app.js')]);
-  assert.equal(JSON.parse(pkg).version,'0.7.5');
-  assert.match(index,/V0\.7\.5/);
-  assert.equal(JSON.parse(manifest).version,'0.7.5');
-  assert.match(sw,/assessor-plus-v0\.7\.5/);
+  assert.equal(JSON.parse(pkg).version,'0.7.6');
+  assert.match(index,/V0\.7\.6(?:-shell-20260811)?/);
+  assert.equal(JSON.parse(manifest).version,'0.7.6');
+  assert.match(sw,/assessor-plus-v0\.7\.6(?:-shell-20260811)?/);
   assert.match(sw,/src\/feedback\.js/);
   assert.match(app,/beforeinstallprompt/);
   assert.match(app,/display-mode: standalone/);
@@ -62,5 +62,5 @@ test('compact UI wires details, pending decisions, ignored review and replacemen
   assert.match(app,/data-detail/);assert.match(app,/map-chip pending/);assert.match(app,/data-sheet-decision/);assert.match(app,/Review ignored/);assert.doesNotMatch(app,/Replace your current feedback|data-generate/);
   const index=await read('index.html');
   const nav=index.match(/<nav class="bottom-nav"[\s\S]*?<\/nav>/)[0];
-  assert.match(nav,/>Learners</);assert.match(nav,/>Assessments</);assert.doesNotMatch(nav,/Home|Reviews|Settings|Admin/);
+  assert.match(nav,/>Learners</);assert.match(nav,/>Planning</);assert.match(nav,/>Home</);assert.doesNotMatch(nav,/Reviews|Settings|Admin/);
 });
