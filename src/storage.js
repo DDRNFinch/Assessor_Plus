@@ -1,5 +1,5 @@
-const DB='assessor-plus-v01',VERSION=2;
-const STORES={learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id'};
+const DB='assessor-plus-v01',VERSION=3;
+const STORES={learners:'id',assessments:'id',media:'id',settings:'key',profileAssets:'key',professionalDocuments:'id',reviews:'id'};
 let promise;
 
 export function openDB(){
@@ -34,8 +34,9 @@ export async function deleteAssessmentCascade(assessmentId){
  const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['assessments','media'],'readwrite'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media');assessments.delete(assessmentId);const request=media.openCursor();request.onsuccess=()=>{const cursor=request.result;if(!cursor)return;const value=cursor.value;if(value.assessmentId===assessmentId)cursor.delete();cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
 }
 export async function deleteLearnerCascade(learnerId){
- const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['learners','assessments','media'],'readwrite'),learners=tx.objectStore('learners'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media'),assessmentIds=new Set();learners.delete(learnerId);const ar=assessments.openCursor();ar.onsuccess=()=>{const cursor=ar.result;if(!cursor){const mr=media.openCursor();mr.onsuccess=()=>{const item=mr.result;if(!item)return;if(assessmentIds.has(item.value.assessmentId))item.delete();item.continue()};return}if(cursor.value.learnerId===learnerId){assessmentIds.add(cursor.value.id);cursor.delete()}cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
+ const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(['learners','assessments','media','reviews'],'readwrite'),learners=tx.objectStore('learners'),assessments=tx.objectStore('assessments'),media=tx.objectStore('media'),reviews=tx.objectStore('reviews'),assessmentIds=new Set();learners.delete(learnerId);const rr=reviews.openCursor();rr.onsuccess=()=>{const cursor=rr.result;if(!cursor)return;if(cursor.value.learnerId===learnerId)cursor.delete();cursor.continue()};const ar=assessments.openCursor();ar.onsuccess=()=>{const cursor=ar.result;if(!cursor){const mr=media.openCursor();mr.onsuccess=()=>{const item=mr.result;if(!item)return;if(assessmentIds.has(item.value.assessmentId))item.delete();item.continue()};return}if(cursor.value.learnerId===learnerId){assessmentIds.add(cursor.value.id);cursor.delete()}cursor.continue()};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
 }
 /** Pure selectors shared by deletion tests and the IndexedDB cascade contract. */
 export const assessmentBelongsToLearner=(assessment,learnerId)=>assessment.learnerId===learnerId;
 export const mediaBelongsToAssessments=(media,assessmentIds)=>assessmentIds.has(media.assessmentId);
+export const reviewBelongsToLearner=(review,learnerId)=>review.learnerId===learnerId;
