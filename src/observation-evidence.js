@@ -1,5 +1,6 @@
 import {deriveMatrix} from './matrix.js';
 import {activeUnitIds,filterAssessmentToActiveUnits} from './progress.js';
+import {DEFAULT_COURSE_ID} from './course.js';
 
 /**
  * Project the existing authoritative Evidence Matrix onto the learner's active
@@ -9,7 +10,7 @@ import {activeUnitIds,filterAssessmentToActiveUnits} from './progress.js';
 export function previousEvidenceMatrix(course,learner,assessments,currentAssessmentId=''){
  const active=activeUnitIds(course,learner);
  const saved=assessments
-  .filter(a=>a.learnerId===learner.id&&a.id!==currentAssessmentId&&active.has(a.primaryUnit))
+  .filter(a=>a.learnerId===learner.id&&a.id!==currentAssessmentId&&(!course.course.id||(a.courseId||DEFAULT_COURSE_ID)===course.course.id)&&active.has(a.primaryUnit))
   .map(a=>filterAssessmentToActiveUnits(a,course,learner));
  return deriveMatrix(saved);
 }
