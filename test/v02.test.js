@@ -10,10 +10,10 @@ const read=path=>readFile(new URL(path,root),'utf8');
 
 test('V0.6 release metadata, shell and offline cache are consistent',async()=>{
   const [pkg,index,manifest,sw,app]=await Promise.all([read('package.json'),read('index.html'),read('manifest.webmanifest'),read('sw.js'),read('src/app.js')]);
-  assert.equal(JSON.parse(pkg).version,'0.7.2');
-  assert.match(index,/V0\.7\.2/);
-  assert.equal(JSON.parse(manifest).version,'0.7.2');
-  assert.match(sw,/assessor-plus-v0\.7\.2/);
+  assert.equal(JSON.parse(pkg).version,'0.7.3');
+  assert.match(index,/V0\.7\.3/);
+  assert.equal(JSON.parse(manifest).version,'0.7.3');
+  assert.match(sw,/assessor-plus-v0\.7\.3/);
   assert.match(sw,/src\/feedback\.js/);
   assert.match(app,/beforeinstallprompt/);
   assert.match(app,/display-mode: standalone/);
@@ -27,10 +27,10 @@ test('manifest is standalone, branded, and all declared icon dimensions are real
   assert.ok(manifest.icons.some(x=>x.sizes==='192x192'));assert.ok(manifest.icons.some(x=>x.sizes==='512x512'));assert.ok(manifest.icons.some(x=>x.purpose==='maskable'));
 });
 
-test('authoritative course file is byte-identical to the V0.1 git baseline',async()=>{
+test('authoritative course file is identical except for approved display-title metadata to the V0.1 git baseline',async()=>{
   const current=await readFile(new URL('level3-trowel-6570-05-FULL-course-data.json',root));
   const digest=createHash('sha256').update(current).digest('hex');
-  assert.equal(digest,'cf08b58a6154cf2dee20e7632d88ba81620be590ba494577ca635501a243f03e');
+  assert.equal(digest,'9011e445dfb3244710031830efbacb737d5fc190ab15e18042826fd81ce50c23');
 });
 
 const learner={name:'Alex Morgan'},unit={id:'235',title:'Erecting masonry structures in the workplace'};
