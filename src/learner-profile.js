@@ -13,7 +13,7 @@ const visitSort=(a,b)=>String(b.date).localeCompare(String(a.date))||String(b.id
 export function actualVisitHistory({learnerId,reviews=[],assessments=[],visits=[]}){
  const rows=[];
  for(const review of reviews)if(review.learnerId===learnerId&&review.status==='Completed'&&review.reviewDate)rows.push({id:`review:${review.id}`,date:review.reviewDate,type:isCatchUpReview(review)?'catchup':'review',reviewId:review.id});
- for(const assessment of assessments)if(assessment.learnerId===learnerId&&assessment.date)rows.push({id:`assessment:${assessment.id}`,date:assessment.date,type:'observation',assessmentId:assessment.id});
+ for(const assessment of assessments)if(assessment.learnerId===learnerId&&assessment.date&&assessment.status!=='Draft')rows.push({id:`assessment:${assessment.id}`,date:assessment.date,type:'observation',assessmentId:assessment.id});
  const byDate=new Map();
  for(const row of rows){const previous=byDate.get(row.date);if(previous&&previous.type!==row.type&&[previous.type,row.type].every(type=>['review','observation'].includes(type))){byDate.set(row.date,{id:`combined:${previous.id}:${row.id}`,date:row.date,type:'combined',reviewId:previous.reviewId||row.reviewId,assessmentId:previous.assessmentId||row.assessmentId});continue}if(!previous)byDate.set(row.date,row);else byDate.set(`${row.date}:${row.id}`,row)}
  // Preserve explicit completed combined visits where legacy records carry both links.
