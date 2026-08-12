@@ -16,7 +16,7 @@ test('compact selector reuses learner progress, displays percentage and keeps ob
   assert.match(app,/name=unit value=.*p\.unit\.id/);
   assert.match(app,/conciseUnitTitle\(p\.unit\)/);
   assert.match(app,/p\.percentage}%/);
-  assert.match(app,/p\.observed\?'<small class=observed>OBSERVED ✓/);
+  assert.match(app,/assessmentBars\(l,course\)/);
   assert.doesNotMatch(app,/p\.observed[^\n]{0,100}disabled/);
   const progress=deriveUnitProgress(course,learner,[assessment]);
   assert.equal(progress.find(p=>p.unit.id==='235').observed,true);
@@ -47,13 +47,13 @@ test('mapping scores, thresholds and inventory remain authoritative',async()=>{
   assert.deepEqual(generateMappings(course).map(({similarity,mappingType})=>[similarity,mappingType]),before);
 });
 
-test('V0.7.11 identifiers and unique cache agree exactly',async()=>{
+test('V0.8.0 identifiers and unique cache agree exactly',async()=>{
   const [pkg,manifest,index,pdf,build,sw]=await Promise.all(['package.json','manifest.webmanifest','index.html','src/pdf.js','scripts/build.js','sw.js'].map(read));
-  assert.equal(JSON.parse(pkg).version,'0.7.11');
-  assert.equal(JSON.parse(manifest).version,'0.7.11');
-  assert.match(index,/V0\.7\.11(?:-[a-z0-9-]+)?/);
-  assert.match(pdf,/ASSESSOR\+ V0\.7\.11(?:-[a-z0-9-]+)?/);
-  assert.match(build,/Built Assessor\+ V0\.7\.11(?:-[a-z0-9-]+)?/);
-  assert.match(sw,/const CACHE='assessor-plus-v0\.7\.11(?:-[a-z0-9-]+)?'/);
+  assert.equal(JSON.parse(pkg).version,'0.8.0');
+  assert.equal(JSON.parse(manifest).version,'0.8.0');
+  assert.match(index,/V0\.8\.0(?:-[a-z0-9-]+)?/);
+  assert.match(pdf,/ASSESSOR\+ V0\.8\.0(?:-[a-z0-9-]+)?/);
+  assert.match(build,/Built Assessor\+ V0\.8\.0(?:-[a-z0-9-]+)?/);
+  assert.match(sw,/const CACHE='assessor-plus-v0\.8\.0(?:-[a-z0-9-]+)?'/);
   assert.doesNotMatch(sw,/assessor-plus-v0\.6(?:'|-date-hotfix)/);
 });
