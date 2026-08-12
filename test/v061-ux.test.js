@@ -47,13 +47,13 @@ test('mapping scores, thresholds and inventory remain authoritative',async()=>{
   assert.deepEqual(generateMappings(course).map(({similarity,mappingType})=>[similarity,mappingType]),before);
 });
 
-test('V0.7.10 identifiers and unique cache agree exactly',async()=>{
+test('V0.7.11 identifiers and unique cache agree exactly',async()=>{
   const [pkg,manifest,index,pdf,build,sw]=await Promise.all(['package.json','manifest.webmanifest','index.html','src/pdf.js','scripts/build.js','sw.js'].map(read));
-  assert.equal(JSON.parse(pkg).version,'0.7.10');
-  assert.equal(JSON.parse(manifest).version,'0.7.10');
-  assert.match(index,/V0\.7\.10(?:-[a-z0-9-]+)?/);
-  assert.match(pdf,/ASSESSOR\+ V0\.7\.10(?:-[a-z0-9-]+)?/);
-  assert.match(build,/Built Assessor\+ V0\.7\.10(?:-[a-z0-9-]+)?/);
-  assert.match(sw,/const CACHE='assessor-plus-v0\.7\.10(?:-[a-z0-9-]+)?'/);
+  assert.equal(JSON.parse(pkg).version,'0.7.11');
+  assert.equal(JSON.parse(manifest).version,'0.7.11');
+  assert.match(index,/V0\.7\.11(?:-[a-z0-9-]+)?/);
+  assert.match(pdf,/ASSESSOR\+ V0\.7\.11(?:-[a-z0-9-]+)?/);
+  assert.match(build,/Built Assessor\+ V0\.7\.11(?:-[a-z0-9-]+)?/);
+  assert.match(sw,/const CACHE='assessor-plus-v0\.7\.11(?:-[a-z0-9-]+)?'/);
   assert.doesNotMatch(sw,/assessor-plus-v0\.6(?:'|-date-hotfix)/);
 });
