@@ -76,8 +76,8 @@ test('media controls hide but retain native inputs, attributes, handlers and exi
  assert.doesNotMatch(pkg,/fontawesome|lucide|heroicons/i);
 });
 
-test('V0.8.0 cache includes the evidence projection module',async()=>{
+test('V0.8.1 cache includes the evidence projection module',async()=>{
  const sw=await read('sw.js');
- assert.match(sw,/assessor-plus-v0\.8\.0(?:-[a-z0-9-]+)?/);
+ assert.match(sw,/assessor-plus-v0\.8\.1(?:-[a-z0-9-]+)?/);
  assert.match(sw,/\.\/src\/observation-evidence\.js/);
 });
