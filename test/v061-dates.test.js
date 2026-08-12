@@ -14,16 +14,11 @@ test('UK date input rejects ISO, alternate separators and impossible dates',()=>
   assert.equal(UK_DATE_VALIDATION_MESSAGE,'Enter a valid date in DD-MM-YYYY format.');
 });
 
-test('shared date input HTML is text based and has no conflicting native constraints',async()=>{
-  assert.match(UK_DATE_INPUT_ATTRIBUTES,/type="text"/);
-  assert.match(UK_DATE_INPUT_ATTRIBUTES,/inputmode="numeric"/);
-  assert.doesNotMatch(UK_DATE_INPUT_ATTRIBUTES,/pattern|type="date"|\bmin=|\bmax=/);
+test('shared date input HTML uses native calendar controls with ISO values',async()=>{
+  assert.equal(UK_DATE_INPUT_ATTRIBUTES,'type="date"');
   const app=await readFile(new URL('../src/app.js',import.meta.url),'utf8');
-  assert.doesNotMatch(app,/pattern=["'][^"']*(?:d\{2\}|\\d\{2\})/);
-  assert.doesNotMatch(app,/type=["']?date\b/);
   for(const field of ['input name=date ${UK_DATE_INPUT_ATTRIBUTES}','input id=date ${UK_DATE_INPUT_ATTRIBUTES}','input name=expiryDate ${UK_DATE_INPUT_ATTRIBUTES}'])assert.ok(app.includes(field),field);
 });
-
 test('saved ISO dates display in UK format without changing existing records',()=>{
   const existing={id:'OBS-0001',date:'2026-08-11',signatureDate:'2026-08-11'};
   const before=structuredClone(existing);

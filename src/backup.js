@@ -2,7 +2,7 @@ import {STORES,readAllStores} from './storage.js';
 import {replaceAllStores} from './restore-storage.js';
 import {createZip,readZip,crc32} from './zip.js';
 
-export const BACKUP_FORMAT='uk.assessorplus.portable-backup',BACKUP_SCHEMA_VERSION=1,APP_VERSION='0.7.8';
+export const BACKUP_FORMAT='uk.assessorplus.portable-backup',BACKUP_SCHEMA_VERSION=1,APP_VERSION='0.7.9';
 export const STORE_NAMES=Object.freeze(Object.keys(STORES));
 const encoder=new TextEncoder(),decoder=new TextDecoder();
 const json=value=>encoder.encode(JSON.stringify(value,null,2));

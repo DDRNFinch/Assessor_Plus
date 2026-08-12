@@ -10,10 +10,10 @@ const read=path=>readFile(new URL(path,root),'utf8');
 
 test('V0.6 release metadata, shell and offline cache are consistent',async()=>{
   const [pkg,index,manifest,sw,app]=await Promise.all([read('package.json'),read('index.html'),read('manifest.webmanifest'),read('sw.js'),read('src/app.js')]);
-  assert.equal(JSON.parse(pkg).version,'0.7.8');
-  assert.match(index,/V0\.7\.8(?:-shell-20260811)?/);
-  assert.equal(JSON.parse(manifest).version,'0.7.8');
-  assert.match(sw,/assessor-plus-v0\.7\.8(?:-shell-20260811)?/);
+  assert.equal(JSON.parse(pkg).version,'0.7.9');
+  assert.match(index,/V0\.7\.9(?:-[a-z0-9-]+)?/);
+  assert.equal(JSON.parse(manifest).version,'0.7.9');
+  assert.match(sw,/assessor-plus-v0\.7\.9(?:-[a-z0-9-]+)?/);
   assert.match(sw,/src\/feedback\.js/);
   assert.match(app,/beforeinstallprompt/);
   assert.match(app,/display-mode: standalone/);

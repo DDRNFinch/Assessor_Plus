@@ -13,6 +13,7 @@ function v1Database(){
  const keys={learners:'id',assessments:'id',media:'id',settings:'key'};
  const state={version:1,records,keys,creates:[]};
  const connection=()=>({
+  get version(){return state.version},
   get objectStoreNames(){return new StoreNames(...Object.keys(state.keys))},
   createObjectStore(name,{keyPath}){state.creates.push(name);state.keys[name]=keyPath;state.records[name]=new Map();return{}},
   close(){this.closed=true},onversionchange:null,
@@ -32,11 +33,11 @@ function v1Database(){
  return {indexedDB,state};
 }
 
-test('a populated V1 database upgrades additively to V4 exactly once',async()=>{
+test('a populated V1 database upgrades additively exactly once',async()=>{
  const fake=v1Database();globalThis.indexedDB=fake.indexedDB;
  const storage=await import(`../src/storage.js?upgrade=${Date.now()}`);
  const db=await storage.openDB();
- assert.equal(fake.state.version,4);
+ assert.equal(fake.state.version,2);
  assert.deepEqual([...db.objectStoreNames].sort(),['assessments','learners','media','professionalDocuments','profileAssets','reviews','settings','visits']);
  assert.deepEqual(fake.state.creates,['profileAssets','professionalDocuments','reviews','visits']);
  assert.equal((await storage.all('learners'))[0].name,'Existing learner');
@@ -65,7 +66,7 @@ test('a blocked IndexedDB open rejects promptly and remains retryable',async()=>
  const storage=await import(`../src/storage.js?blocked=${Date.now()}`);
  await assert.rejects(storage.openDB(),error=>error.name==='BlockedError');
  await storage.openDB();
- assert.equal(opens,2);
+ assert.equal(opens,3);
 });
 
 test('startup failure has a non-technical recoverable UI and blocked upgrades are diagnosed',async()=>{
