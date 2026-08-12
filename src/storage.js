@@ -41,7 +41,7 @@ function sanitise(store,value){
  if(store==='learners')return {...value,id:String(value.id||''),name:String(value.name||''),status:value.status||'active'};
  if(store==='assessments')return {...value,id:String(value.id||''),learnerId:String(value.learnerId||''),date:String(value.date||''),updatedAt:String(value.updatedAt||value.date||''),media:Array.isArray(value.media)?value.media.filter(x=>x&&x.id):[],knowledgeEvidence:Array.isArray(value.knowledgeEvidence)?value.knowledgeEvidence.filter(x=>x&&x.id):[]};
  if(store==='reviews')return {...value,id:String(value.id||''),learnerId:String(value.learnerId||''),reviewDate:String(value.reviewDate||''),updatedAt:String(value.updatedAt||value.reviewDate||''),status:value.status||'Draft',targets:Array.isArray(value.targets)?value.targets:[],apprentice:value.apprentice&&typeof value.apprentice==='object'?value.apprentice:{comments:'',concern:'No concerns',concernNotes:''}};
- if(store==='visits')return {...value,id:String(value.id||''),learnerId:String(value.learnerId||''),date:String(value.date||''),time:String(value.time||'00:00'),type:['review','observation','combined'].includes(value.type)?value.type:'review',status:value.status||'planned'};
+ if(store==='visits')return {...value,id:String(value.id||''),learnerId:String(value.learnerId||''),date:String(value.date||''),time:String(value.time||'00:00'),type:['review','observation','combined','catchup'].includes(value.type)?value.type:'review',status:value.status||'planned'};
  return value;
 }
 
